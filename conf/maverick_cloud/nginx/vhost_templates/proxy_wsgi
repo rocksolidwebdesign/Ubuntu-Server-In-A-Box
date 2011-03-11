@@ -1,0 +1,13 @@
+server {
+    listen 80;
+    server_name django.SERVERDOMAINNAME;
+
+    location / {
+        proxy_pass http://127.0.0.1:8000;
+        proxy_set_header Host $host;
+    }
+
+    location ~* \.(gif|jpg|png|ico|css|js)$ {
+        root /home/ae/Sites/apache/$host/public;
+    }
+}

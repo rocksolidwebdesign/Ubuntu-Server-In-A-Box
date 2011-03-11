@@ -1,0 +1,7 @@
+quickfab/ubuntu/settings.py
+conf/gitolite.conf
+conf/apache/localhost/public.tar.gz
+conf/apache/vhosts.tar.gz
+conf/nginx/vhosts.tar.gz
+conf/skel.tar.gz
+keys/*

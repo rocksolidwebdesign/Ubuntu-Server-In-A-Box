@@ -1,0 +1,23 @@
+ssl_session_cache    shared:SSL:10m;
+ssl_session_timeout  10m;
+
+server {
+    listen               443;
+    server_name          localhost;
+    keepalive_timeout    70;
+
+    ssl                  on;
+    ssl_certificate      ssl/snakeoil.crt;
+    ssl_certificate_key  ssl/snakeoil.key;
+    ssl_protocols        SSLv3 TLSv1;
+    ssl_ciphers          HIGH:!ADH:!MD5;
+
+    location / {
+        proxy_pass https://127.0.0.1:4433;
+        proxy_set_header Host $host;
+    }
+
+    location ~* \.(gif|jpg|png|ico|css|js)$ {
+        root /home/ae/Sites/apache/$host/public;
+    }
+}

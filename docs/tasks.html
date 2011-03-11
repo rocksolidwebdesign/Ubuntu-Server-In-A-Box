@@ -1,0 +1,696 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Tasks &mdash; Ubuntu Server In A Box v0.0.1 documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Ubuntu Server In A Box v0.0.1 documentation" href="index.html" />
+    <link rel="prev" title="Configuration Directory" href="config_dir.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="config_dir.html" title="Configuration Directory"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Ubuntu Server In A Box v0.0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="tasks">
+<h1>Tasks<a class="headerlink" href="#tasks" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="tasks-overview">
+<span id="id1"></span><h2>Tasks Overview<a class="headerlink" href="#tasks-overview" title="Permalink to this headline">¶</a></h2>
+<p>Tasks  have a  few basic  naming conventions  based on  what
+their names start with.</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">setup_*</span></tt>   These are compound tasks that call other tasks</li>
+<li><tt class="docutils literal"><span class="pre">install_*</span></tt> These are where all the work is done for the most part</li>
+<li><tt class="docutils literal"><span class="pre">aptget_*</span></tt>  Software installation from the package manager, ubuntu specific</li>
+<li><tt class="docutils literal"><span class="pre">clean_*</span></tt>   Deletes some sort of config or automatically generated file</li>
+<li><tt class="docutils literal"><span class="pre">restore_*</span></tt> Restores some part of the system to its original pristine state</li>
+<li><tt class="docutils literal"><span class="pre">backup_*</span></tt>  Backs up some files prior editing part of the system&#8217;s configuration</li>
+<li><tt class="docutils literal"><span class="pre">regen_*</span></tt>   Local config file generation and packaging</li>
+<li><tt class="docutils literal"><span class="pre">test_*</span></tt>    Really simple tests for validating that your connections work</li>
+</ul>
+<p>There are  a handful  of other  slightly less  standard task
+names,  most of  which  are  meant to  be  utility tasks  of
+some  kind or  aren&#8217;t  as modular  and  repeatable as  these
+other  standard tasks  and so  don&#8217;t necessarily  follow any
+particular naming conventions.</p>
+<p>Most  of  the  tasks  are  fairly  module  and  specifically
+suited  to being  put  together to  form more  comprehensive
+administration tasks that are common enough to be cumbersome
+on their own and when modularized, allow new more powerfully
+expressive ways of getting stuff done.</p>
+<p>I highly encourage you to try running single tasks at a time
+and watching what they do on the server.</p>
+</div>
+<div class="section" id="venturing-outside-the-box">
+<span id="customizing-tasks"></span><h2>Venturing Outside The Box<a class="headerlink" href="#venturing-outside-the-box" title="Permalink to this headline">¶</a></h2>
+<p>If you want to do  anything more complicated than the config
+files will allow,  then you&#8217;ll want to modify  the fab tasks
+themselves.</p>
+<p>To  get an  idea  of  how to  modify  these  tasks, I  would
+recommend  reading the  Task API  and then  also looking  at
+<a class="reference internal" href="config_dir.html"><em>Configuration Directory</em></a></p>
+<p>If  you want  to  for  example change  the  way gitolite  or
+Apache adds  users and  vhosts, you&#8217;ll want  to look  at the
+<tt class="docutils literal"><span class="pre">install_</span></tt> related tasks</p>
+<p>You  may  likely  also  want  to change  the  way  that  the
+<tt class="docutils literal"><span class="pre">regen_</span></tt>  tasks  work because  these  are  the tasks  that
+actually put  together your config  files for upload  to the
+server</p>
+<p>Any  <tt class="docutils literal"><span class="pre">install_</span></tt> related  task you  create should  probably
+have a  corresponding <tt class="docutils literal"><span class="pre">backup_</span></tt> and <tt class="docutils literal"><span class="pre">restore_</span></tt>  task, or
+at the very  least a <tt class="docutils literal"><span class="pre">clean_</span></tt> task, but none  of these are
+strictly necessary.</p>
+<p>If  you want  to  adapt this  for  a different  distribution
+you&#8217;ll want to look at the <tt class="docutils literal"><span class="pre">aptget_</span></tt> related tasks and add
+corresponding tasks for <tt class="docutils literal"><span class="pre">yum</span></tt></p>
+</div>
+<div class="section" id="task-api">
+<span id="id2"></span><h2>Task API<a class="headerlink" href="#task-api" title="Permalink to this headline">¶</a></h2>
+<p>Here is the documentation for each fab task that is available</p>
+<p>You can of course, also see this list with <tt class="docutils literal"><span class="pre">fab</span> <span class="pre">--list</span></tt></p>
+<span class="target" id="module-quickfab.ubuntu.fabfile"></span><dl class="function">
+<dt id="quickfab.ubuntu.fabfile.a2enmod_proxy">
+<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">a2enmod_proxy</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.a2enmod_proxy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mod proxy is not enable by default, so enable it.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="quickfab.ubuntu.fabfile.a2enmod_rewrite">
+<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">a2enmod_rewrite</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.a2enmod_rewrite" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mod rewrite is not enabled by default, so enable it.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="quickfab.ubuntu.fabfile.add_custom_user">
+<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">add_custom_user</tt><big>(</big><em>user</em>, <em>passw</em>, <em>fancy=True</em><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.add_custom_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a user with a preconfigured home directory</p>
+<p>Add a user account with a skeleton directory structure
+from the config in the local skel dir</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="quickfab.ubuntu.fabfile.add_prompt_to_user">
+<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">add_prompt_to_user</tt><big>(</big><em>home='~'</em>, <em>user=''</em><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.add_prompt_to_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add an awesomely cool shell prompt for a user</p>
+<p>Our setup comes with a cool prompt but that comes from the
+skeleton directory for new users. If we are already a user, e.g.
+if we&#8217;re root or the default system user then we&#8217;ve already got
+a home directory and some config files, so we&#8217;ll need to
+gracefully add our setup with as little invasiveness as possible.</p>
+<p>The <tt class="docutils literal"><span class="pre">home</span></tt> and <tt class="docutils literal"><span class="pre">user</span></tt> parameters are used if you are making
+this copy as another user, for example as root. In that case,
+after you are done copying these files, you&#8217;ll want to hand
+ownership over to the user in question, also you&#8217;ll want
+the files to be uploaded to the proper home directory.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="quickfab.ubuntu.fabfile.aptget_common_headers">
+<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">aptget_common_headers</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.aptget_common_headers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Install database, image and xml dev headers for compiling modules</p>
+<p>Common PHP, Ruby and python modules want some various dev
+headers around if we&#8217;re going to compile from scratch</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="quickfab.ubuntu.fabfile.aptget_compiler">
+<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">aptget_compiler</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.aptget_compiler" title="Permalink to this definition">¶</a></dt>
+<dd><p>We&#8217;ll need a compiler and basic build tools if we want
+to compile software.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="quickfab.ubuntu.fabfile.aptget_databases">
+<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">aptget_databases</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.aptget_databases" title="Permalink to this definition">¶</a></dt>
+<dd><p>Install the common databases: MySQL, Postgres and SQLite</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="quickfab.ubuntu.fabfile.aptget_lamp">
+<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">aptget_lamp</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.aptget_lamp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Install Apache along with CGI and PHP modules</p>
+<p>And a whole ton of common PHP extensions that should 
+be good enough for running common fairly advanced 
+software like Magento</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="quickfab.ubuntu.fabfile.aptget_mailserver">
+<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">aptget_mailserver</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.aptget_mailserver" title="Permalink to this definition">¶</a></dt>
+<dd><p>Install the commonly desired tools for setting up a mail server</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="quickfab.ubuntu.fabfile.aptget_misc_utilities">
+<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">aptget_misc_utilities</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.aptget_misc_utilities" title="Permalink to this definition">¶</a></dt>
+<dd><p>Installs <tt class="docutils literal"><span class="pre">locate</span></tt>, <tt class="docutils literal"><span class="pre">tmux</span></tt>, <tt class="docutils literal"><span class="pre">add-apt-repository</span></tt></p>
+<p>Some   various  handy   things   I   alwas  want,   plus
+<tt class="docutils literal"><span class="pre">add-apt-repository</span></tt> is currently  a dependency of the
+ubuntu packaging tasks, so do  not remove that or remove
+calls to this function</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="quickfab.ubuntu.fabfile.aptget_mod_wsgi">
+<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">aptget_mod_wsgi</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.aptget_mod_wsgi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Install and enable the WSGI module for running python apps</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="quickfab.ubuntu.fabfile.aptget_nginx">
+<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">aptget_nginx</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.aptget_nginx" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update to the lates nginx repo and install nginx</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="quickfab.ubuntu.fabfile.aptget_software_updates">
+<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">aptget_software_updates</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.aptget_software_updates" title="Permalink to this definition">¶</a></dt>
+<dd><p>Download and install the latest security patches for Ubuntu.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="quickfab.ubuntu.fabfile.aptget_uwsgi">
+<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">aptget_uwsgi</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.aptget_uwsgi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update to the latest uwsgi repo and install uwsgi</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="quickfab.ubuntu.fabfile.aptget_version_control">
+<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">aptget_version_control</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.aptget_version_control" title="Permalink to this definition">¶</a></dt>
+<dd><p>Install git, subversion and servers for both of them</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="quickfab.ubuntu.fabfile.aptget_vim73">
+<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">aptget_vim73</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.aptget_vim73" title="Permalink to this definition">¶</a></dt>
+<dd><p>Install the latest vim which right now is 7.3</p>
+<p>Update to the latest vim repo and install the latest vim
+plus a couple common utilities that my vim config uses:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">ctags</span></tt> exuberrant ctags</li>
+<li><tt class="docutils literal"><span class="pre">par</span></tt> the paragraph formatter</li>
+</ul>
+</dd></dl>
+
+<dl class="function">
+<dt id="quickfab.ubuntu.fabfile.backup_apache_config">
+<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">backup_apache_config</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.backup_apache_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Backs up the apache config to the backup directory</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="quickfab.ubuntu.fabfile.backup_nginx_config">
+<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">backup_nginx_config</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.backup_nginx_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Backs up the nginx configuration dir into the backup directory</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="quickfab.ubuntu.fabfile.backup_user_home">
+<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">backup_user_home</tt><big>(</big><em>user</em><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.backup_user_home" title="Permalink to this definition">¶</a></dt>
+<dd><p>Backup a users home dir to the backup dir</p>
+<p>If no backup yet exists for the given user&#8217;s home directory
+then create a backup for that user in remote_backup_dir/home_user.tar.gz</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="quickfab.ubuntu.fabfile.backup_webroot">
+<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">backup_webroot</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.backup_webroot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Backs up the webroot if it exists.</p>
+<p>Title should be self explanatory, this backs up the main server
+webroot directory if it exists.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="quickfab.ubuntu.fabfile.clean">
+<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">clean</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.clean" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is more like make clean. This deletes all the custom config files
+generated by regen_configs()</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="quickfab.ubuntu.fabfile.clean_all">
+<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">clean_all</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.clean_all" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sort of like make clean but more like uninstall.</p>
+<p>This tries to remove all custom configs, delete 
+all users, and restore original configs from the 
+backups made by this script.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="quickfab.ubuntu.fabfile.clean_etc_skel">
+<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">clean_etc_skel</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.clean_etc_skel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes the user configuration skeleton dir</p>
+<p>Removes the skeleton from the config directory. Maybe don&#8217;t need
+this since we&#8217;ve got a clean config task already?</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="quickfab.ubuntu.fabfile.clean_gitolite">
+<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">clean_gitolite</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.clean_gitolite" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete the gitolite specific files for repositories and config and such</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="quickfab.ubuntu.fabfile.clean_master_users">
+<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">clean_master_users</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.clean_master_users" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove the deploy and main user accounts</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="quickfab.ubuntu.fabfile.clean_remote_backup_dir">
+<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">clean_remote_backup_dir</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.clean_remote_backup_dir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove the main remote backup dir</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="quickfab.ubuntu.fabfile.clean_remote_config_dir">
+<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">clean_remote_config_dir</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.clean_remote_config_dir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove the main configuration uploads dir</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="quickfab.ubuntu.fabfile.clean_root_user">
+<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">clean_root_user</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.clean_root_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Try to clean up any of the custom user configurations for root</p>
+<p>Remove the custom vim configuration if it exists. Remove sudoers file.
+Delete various other shell customization files.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="quickfab.ubuntu.fabfile.clean_team_sudoers">
+<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">clean_team_sudoers</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.clean_team_sudoers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove the extra team privileges</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="quickfab.ubuntu.fabfile.clean_team_users">
+<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">clean_team_users</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.clean_team_users" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove any team user accounts</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="quickfab.ubuntu.fabfile.clean_vim_config">
+<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">clean_vim_config</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.clean_vim_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete the custom system wide vim config files if they exist</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="quickfab.ubuntu.fabfile.clone_root_pubkey">
+<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">clone_root_pubkey</tt><big>(</big><em>user</em>, <em>home</em><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.clone_root_pubkey" title="Permalink to this definition">¶</a></dt>
+<dd><p>Copy pubkey from root to avoid password prompt</p>
+<p>Copy our current key from the root user to another user to
+avoid the need for a password when logging in.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="quickfab.ubuntu.fabfile.configure_open_share">
+<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">configure_open_share</tt><big>(</big><em>user</em>, <em>group</em>, <em>d</em><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.configure_open_share" title="Permalink to this definition">¶</a></dt>
+<dd><p>Recursively set and enforce group ownership of a directory</p>
+<p>This is the case where we want all users of the group
+to always be able to have write permissions on all files
+in this directory, even new files created by other people.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="quickfab.ubuntu.fabfile.configure_python_virtualenv">
+<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">configure_python_virtualenv</tt><big>(</big><em>target_host</em><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.configure_python_virtualenv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add virtualenv capabilites to this user.</p>
+<p>Mostly this just adds the config settings to the ~/.bashrc to
+provide access to <tt class="docutils literal"><span class="pre">workon</span></tt> and <tt class="docutils literal"><span class="pre">mkvirtualenv</span></tt>. This is
+only applicable on a per user basis.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="quickfab.ubuntu.fabfile.configure_restricted_share">
+<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">configure_restricted_share</tt><big>(</big><em>user</em>, <em>group</em>, <em>d</em><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.configure_restricted_share" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set group ownership of a directory</p>
+<p>This is the case in which we want users to be able to add
+files to a directory but not automatically be able to edit
+or change the contents of that directory.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="quickfab.ubuntu.fabfile.docs">
+<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">docs</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.docs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Regenerate the sphinx based documentation for this fabfile</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="quickfab.ubuntu.fabfile.init_root_user">
+<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">init_root_user</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.init_root_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configure a root user account for convenient access, requires root password.</p>
+<p>Installs your SSH key for the root user. Uploads the custom
+home directory skeleton for new users. Creates backup
+and config directories.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="quickfab.ubuntu.fabfile.init_system">
+<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">init_system</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.init_system" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialialize the bare necessities, i.e. root user etc</p>
+<p>Configures your admin user. Uploads the custom
+home directory skeleton for new users. Creates backup
+and config directories.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="quickfab.ubuntu.fabfile.install_apache_config">
+<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">install_apache_config</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.install_apache_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Install apache vhosts and custom &#8220;behind nginx&#8221; switch</p>
+<p>Copies the customized and templated vhosts from
+your local config dir to the actual web server and
+then restarts.  This also sets up a symlink for
+ports to allow switching between having apache
+as the master server and having apache behind an
+nginx reverse proxy. Sets up permissions for
+team sharing of the vhost configs.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="quickfab.ubuntu.fabfile.install_etc_skel">
+<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">install_etc_skel</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.install_etc_skel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Uploads the new user skeleton directory to the remote_config_dir</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="quickfab.ubuntu.fabfile.install_gitolite_config">
+<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">install_gitolite_config</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.install_gitolite_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initializes and sets up the gitolite server</p>
+<p>Installs and a basic git server adds your repos and gives
+your developers access to those repos. There&#8217;s no backup
+fab task because there are never any repos to begin with,
+you may however wish to run the <tt class="docutils literal"><span class="pre">clean_gitolite</span></tt> task
+which deletes any and all files that the gitolite setup
+adds to its home directory.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="quickfab.ubuntu.fabfile.install_master_users">
+<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">install_master_users</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.install_master_users" title="Permalink to this definition">¶</a></dt>
+<dd><p>Install deploy and main users depending on <tt class="docutils literal"><span class="pre">single_user_mode</span></tt></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="quickfab.ubuntu.fabfile.install_nginx_config">
+<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">install_nginx_config</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.install_nginx_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Install nginx vhosts suitable for reverse proxying Apache</p>
+<p>Copies the customized and templated vhosts from
+your local config dir to the actual web server and
+then restarts. Sets up permissions for team sharing
+of the vhost configs. For now these are not turned on
+by default.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="quickfab.ubuntu.fabfile.install_python_distribute">
+<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">install_python_distribute</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.install_python_distribute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Installs the &#8220;distribute&#8221; python package, a setuptools clone</p>
+<p>Install setuptools so we can build pip and other packages.
+I prefer using distribute.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="quickfab.ubuntu.fabfile.install_python_pip">
+<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">install_python_pip</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.install_python_pip" title="Permalink to this definition">¶</a></dt>
+<dd><p>Download and install a recent version of the pip utility</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="quickfab.ubuntu.fabfile.install_python_virtualenv">
+<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">install_python_virtualenv</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.install_python_virtualenv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Install virtualenv and virtual env wrapper from pip</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="quickfab.ubuntu.fabfile.install_ruby_rvm">
+<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">install_ruby_rvm</tt><big>(</big><em>target_host</em><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.install_ruby_rvm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Download and install RVM (the Ruby Version Manager)</p>
+<p>Add rvm capabilites to this user. Mostly this
+just adds the config settings to the ~/.bashrc to
+provide access to <tt class="docutils literal"><span class="pre">rvm</span></tt>. This is only applicable
+on a per user basis.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="quickfab.ubuntu.fabfile.install_team_sudoers">
+<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">install_team_sudoers</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.install_team_sudoers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Give team members some limited webserver related priviliges</p>
+<p>Install our own custom sudoers config for the team to
+allow team members to stop and start the web server.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="quickfab.ubuntu.fabfile.install_team_users">
+<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">install_team_users</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.install_team_users" title="Permalink to this definition">¶</a></dt>
+<dd><p>Setup team user accounts for each member</p>
+<p>If this is a shared workgroup server with multiple user
+accounts, then set up each initial user account with
+proper group and permissions to work on the same files</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="quickfab.ubuntu.fabfile.install_vim_config">
+<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">install_vim_config</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.install_vim_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Install custom vim configuration</p>
+<p>Try to install our custom vim configuration in the main system 
+for all users.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="quickfab.ubuntu.fabfile.install_webroot">
+<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">install_webroot</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.install_webroot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create initial webroot directory layout for Apache, Django and Rails</p>
+<p>Sets up the initial outline for the main web server root directory.
+The way I like it is split in to three sections one for apache/php
+and two others for python and ruby (rails and django) projects.</p>
+<p>The currently installed folders are</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">webroot/apache</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">webroot/django</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">webroot/rails</span></tt></li>
+</ul>
+</dd></dl>
+
+<dl class="function">
+<dt id="quickfab.ubuntu.fabfile.regen_configs">
+<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">regen_configs</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.regen_configs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate server config files, like vhosts, based on templates.</p>
+<p>Generate the config files from their respective templates. Also
+the list of gitolite repos is built from the settings array <tt class="docutils literal"><span class="pre">git_hosted_repos</span></tt></p>
+<p>Currently this list of templates includes</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">apache/vhost_templates</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">nginx/vhost_templates</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">gitolite.conf.sample</span></tt></li>
+</ul>
+</dd></dl>
+
+<dl class="function">
+<dt id="quickfab.ubuntu.fabfile.regen_tarballs">
+<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">regen_tarballs</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.regen_tarballs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tarball the config tarballs for ease of upload</p>
+<p>This script uploads a number of tarballs that are used to configure
+the server with the settings you want. This Method freshly regenerates
+those tarballs from scratch and keeps timestamped backups of any
+tarballs that might already exist. The current tarballs are</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">conf/skel</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">conf/apache/localhost/public</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">conf/apache/sites-available</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">conf/nginx/sites-available</span></tt></li>
+</ul>
+</dd></dl>
+
+<dl class="function">
+<dt id="quickfab.ubuntu.fabfile.reskel_existing_user">
+<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">reskel_existing_user</tt><big>(</big><em>user</em>, <em>home=''</em><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.reskel_existing_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add custom user configuration to an existing user</p>
+<p>Backup the user&#8217;s home directory and install
+fresh files from the custom skeleton instead</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="quickfab.ubuntu.fabfile.restore_apache_config">
+<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">restore_apache_config</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.restore_apache_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Restore original apache config from backup if the backup exists</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="quickfab.ubuntu.fabfile.restore_nginx_config">
+<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">restore_nginx_config</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.restore_nginx_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Restore original nginx config from backup if the backup exists</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="quickfab.ubuntu.fabfile.restore_user_home">
+<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">restore_user_home</tt><big>(</big><em>user</em><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.restore_user_home" title="Permalink to this definition">¶</a></dt>
+<dd><p>Restore a user&#8217;s original home directory from the backup dir</p>
+<p>If a backup exists for the user&#8217;s home directory, delete the
+current home directory and restore from the backup.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="quickfab.ubuntu.fabfile.restore_webroot">
+<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">restore_webroot</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.restore_webroot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Restore original webroot from backup if the backup exists</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="quickfab.ubuntu.fabfile.setup_all">
+<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">setup_all</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.setup_all" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bootstrap an entire server from a blank rackspace Ubuntu 10.10 VPS</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="quickfab.ubuntu.fabfile.setup_packages">
+<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">setup_packages</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.setup_packages" title="Permalink to this definition">¶</a></dt>
+<dd><p>Installs all software that comes from the package manager</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="quickfab.ubuntu.fabfile.setup_ruby_python">
+<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">setup_ruby_python</tt><big>(</big><em>target_host='webmaster&#64;thundercloud.mycorp.dyndns.org'</em><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.setup_ruby_python" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configures virtualenv and rvm for a particular user</p>
+<p>By default this is the deploy user.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="quickfab.ubuntu.fabfile.setup_server">
+<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">setup_server</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.setup_server" title="Permalink to this definition">¶</a></dt>
+<dd><p>Installs and configures web, mail and git servers</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="quickfab.ubuntu.fabfile.setup_users">
+<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">setup_users</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.setup_users" title="Permalink to this definition">¶</a></dt>
+<dd><p>Install basic user accounts</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="quickfab.ubuntu.fabfile.setup_virtualenv">
+<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">setup_virtualenv</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.setup_virtualenv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Installs virtualenv system wide</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="quickfab.ubuntu.fabfile.test_local">
+<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">test_local</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.test_local" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test echo on localhost. Reports the git user settings and the environment $SHELL variable.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="quickfab.ubuntu.fabfile.test_remote">
+<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">test_remote</tt><big>(</big><em>user='root'</em><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.test_remote" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test a remote host, takes user account login name as a single argument</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="quickfab.ubuntu.fabfile.upload_website_apache_localhost">
+<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">upload_website_apache_localhost</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.upload_website_apache_localhost" title="Permalink to this definition">¶</a></dt>
+<dd><p>Uploads the actual publicly accessible files for the default localhost</p>
+<p>Installs a set of skeleton files for the default vhost, aka
+localhost, for apache. Right now this is basically just <tt class="docutils literal"><span class="pre">info.php</span></tt>
+which has a call to <tt class="docutils literal"><span class="pre">phpinfo()</span></tt> and a default index file
+so you can see that the server is working.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Tasks</a><ul>
+<li><a class="reference internal" href="#tasks-overview">Tasks Overview</a></li>
+<li><a class="reference internal" href="#venturing-outside-the-box">Venturing Outside The Box</a></li>
+<li><a class="reference internal" href="#task-api">Task API</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="config_dir.html"
+                        title="previous chapter">Configuration Directory</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/tasks.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="config_dir.html" title="Configuration Directory"
+             >previous</a> |</li>
+        <li><a href="index.html">Ubuntu Server In A Box v0.0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011, Vaughn Draughon.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>

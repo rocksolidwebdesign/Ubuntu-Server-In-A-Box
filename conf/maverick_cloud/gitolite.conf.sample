@@ -1,0 +1,10 @@
+@admins = SERVERADMINS
+@devteam = SERVERDEVTEAM
+
+repo gitolite-admin
+RW+  = @admins
+
+repo testing
+RW+  = @all
+
+include "gitolite_repos.conf"

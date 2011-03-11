@@ -1,0 +1,345 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Ubuntu Server In A Box Fabfile &mdash; Ubuntu Server In A Box v0.0.1 documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Ubuntu Server In A Box v0.0.1 documentation" href="#" />
+    <link rel="next" title="Settings" href="settings.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="settings.html" title="Settings"
+             accesskey="N">next</a> |</li>
+        <li><a href="#">Ubuntu Server In A Box v0.0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="ubuntu-server-in-a-box-fabfile">
+<h1>Ubuntu Server In A Box Fabfile<a class="headerlink" href="#ubuntu-server-in-a-box-fabfile" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="what-is-it">
+<span id="about"></span><h1>What Is It?<a class="headerlink" href="#what-is-it" title="Permalink to this headline">¶</a></h1>
+<p>A  python script  to  automatically install  a complete  web
+server  using  Ubuntu  10.10  including</p>
+<ul class="simple">
+<li>Web Server</li>
+<li>Database Server</li>
+<li>Git Repository Server</li>
+<li>EMail Server</li>
+</ul>
+<p>Suitable for  development or  staging servers that  may host
+multiple  domains. Possibly  even  useful  for a  production
+server.</p>
+</div>
+<div class="section" id="quick-start">
+<span id="id1"></span><h1>Quick Start<a class="headerlink" href="#quick-start" title="Permalink to this headline">¶</a></h1>
+<p>To give it the old college try, use this handy installer script:</p>
+<div class="highlight-python"><pre>bash &lt; &lt;( curl http://github.com/rocksolidwebdesign/Ubuntu-Server-In-A-Box/raw/master/download-install )</pre>
+</div>
+<p>This script should  install Fabric if you don&#8217;t  have it and
+should initiate a session, all  you need is the hostname and
+root password of an Ubuntu 10.10 server.</p>
+<p>Ideally this would be a new Rackspace Cloud Server instance.</p>
+</div>
+<div class="section" id="requirements">
+<span id="id2"></span><h1>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline">¶</a></h1>
+<p>You need:</p>
+<ul class="simple">
+<li>Python <a class="reference external" href="http://python.org/">http://python.org/</a></li>
+<li>Fabric (the package for Python) <a class="reference external" href="http://fabfile.org/">http://fabfile.org/</a></li>
+<li>An Ubuntu 10.10 system</li>
+<li>Root shell access</li>
+</ul>
+<p>These fab tasks are specifically intended to be used with an
+Ubuntu 10.10 system that has  shell access to a literal root
+account -  namely Rackspace  Cloud Server  instances running
+Ubuntu 10.10  Business Edition,  previously known  as Ubuntu
+Server 10.10.</p>
+<p>Other setups are planned for future releases.</p>
+</div>
+<div class="section" id="basic-usage">
+<span id="basics"></span><h1>Basic Usage<a class="headerlink" href="#basic-usage" title="Permalink to this headline">¶</a></h1>
+<p>Download from github:</p>
+<div class="highlight-python"><pre>git clone http://github.com/rocksolidwebdesign/Ubuntu-Server-In-A-Box.git
+cd Ubuntu-Server-In-A-Box</pre>
+</div>
+<p>Install requirements (Fabric is currently the only requirement):</p>
+<div class="highlight-python"><pre>pip install -r requirements.txt</pre>
+</div>
+<p>Copy the example settings file as <tt class="docutils literal"><span class="pre">settings.py</span></tt>:</p>
+<div class="highlight-python"><pre>cd quickfab/ubuntu
+cp settings.py.sample settings.py</pre>
+</div>
+<p>Customize the settings to your taste, full documentation can be found in <a class="reference internal" href="settings.html"><em>Settings</em></a>:</p>
+<div class="highlight-python"><pre>vim settings.py</pre>
+</div>
+<p>Run the main fab task:</p>
+<div class="highlight-python"><pre>fab setup_all</pre>
+</div>
+<p>Run the clean task to delete your locally cached config files:</p>
+<div class="highlight-python"><pre>fab clean</pre>
+</div>
+<p>There are far more tasks than just these two and in fact I would encourage you
+to use single tasks at a time because that will help you get an understanding
+of what the system actually does and how to customize it for your needs</p>
+<p>You can get a complete list of all the fab tasks with:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">fab</span> <span class="o">--</span><span class="nb">list</span>
+</pre></div>
+</div>
+<p>Full documentation for tasks can be found in <a class="reference internal" href="tasks.html"><em>Tasks</em></a></p>
+</div>
+<div class="section" id="complete-install-instructions">
+<span id="install"></span><h1>Complete Install Instructions<a class="headerlink" href="#complete-install-instructions" title="Permalink to this headline">¶</a></h1>
+<p>Here are the longer  and more complete download instructions
+with explanations:</p>
+<div class="highlight-python"><pre>user@somehost ~/fabfiles/ubuntucloud$ git clone http://github.com/rocksolidwebdesign/QuickFab.git cloudfab
+user@somehost ~$ cd cloudfab</pre>
+</div>
+<p>you&#8217;ll need Python&#8217;s Fabric best retrieved through pip:</p>
+<div class="highlight-python"><pre>user@somehost ~/cloudfab$ sudo pip install -r requirements.txt</pre>
+</div>
+<p>if you don&#8217;t have pip, or a pip version that&#8217;s recent enough to
+support requirements, then you probably have <tt class="docutils literal"><span class="pre">easy_install</span></tt>:</p>
+<div class="highlight-python"><pre>user@somehost ~/cloudfab$ sudo easy_install -r requirements.txt</pre>
+</div>
+<p>and if you  don&#8217;t have <tt class="docutils literal"><span class="pre">easy_install</span></tt> or  pip, then you&#8217;ll
+probably  need and  want  to  get one  or  the other  before
+continuing.:</p>
+<div class="highlight-python"><pre>user@somehost ~/cloudfab$ sudo apt-get install python-pip</pre>
+</div>
+<p>otherwise, if you&#8217;re not on ubuntu for your local machine,
+please see the Fabric documentation for installation:</p>
+<p><a class="reference external" href="http://docs.fabfile.org/en/1.0.0/installation.html">http://docs.fabfile.org/en/1.0.0/installation.html</a></p>
+<p>next edit  settings.py you&#8217;ll  need to  at least  change the
+server&#8217;s hostname and master  usernames including the deploy
+user and  the main  username. you&#8217;ll  probably also  want to
+change the name and email  for the git repository admin. and
+you may wish to specify a different webroot for example.</p>
+<p>there is  further simple configuration  that can be  done in
+terms of defining your team members, but this example should
+work and  install out of the  box with the example  users if
+you&#8217;re just testing this for the  first time, so you can get
+a feel for how it works:</p>
+<div class="highlight-python"><pre>user@somehost ~/cloudfab$ fab setup_all</pre>
+</div>
+</div>
+<div class="section" id="what-it-does">
+<span id="overview"></span><h1>What It Does<a class="headerlink" href="#what-it-does" title="Permalink to this headline">¶</a></h1>
+<p>This  project  aims to  install  a  fully working  and  semi
+production ready web  server using Ubuntu 10.10  and for use
+somewhere along your deployment chain, most likely as dev or
+staging, but possibly  this could be a base for  prod if you
+add some better security measures and whatnot.</p>
+<p>To use this  fabfile you will need any  Ubuntu 10.10 server,
+available over  the internet  or local network  with literal
+root access, no sudo for now, though that is planned.</p>
+</div>
+<div class="section" id="what-you-get">
+<span id="results"></span><h1>What You Get<a class="headerlink" href="#what-you-get" title="Permalink to this headline">¶</a></h1>
+<p>When you are done you will have a server with the following
+general setup in terms of users and software</p>
+<ul class="simple">
+<li>Apache with  some default  vhosts and  a few  other simple
+vhosts  for  acting  as  proxy to  the  Django  and  Rails
+development servers</li>
+<li>Nginx with  some default  example vhosts  and a  few other
+simple vhosts for acting as  a reverse proxy to Apache and
+as proxy to the Django and Rails development servers</li>
+<li>One deploy  user account that  can edit all  website files
+and who can restart the webserver without a password. this
+user may or may not also have full sudo privileges</li>
+<li>One  master   user  account  with  full   sudo  privileges
+essentially a root equivalent</li>
+<li>A number of  web developers who also have  shell access to
+the  server and  who will  also want  shell account  these
+users will  also have  similarly limited  privileges, even
+further  limited in  their  abilities to  muck about  with
+other people&#8217;s files</li>
+</ul>
+</div>
+<div class="section" id="specifically-what-you-get">
+<span id="package-versions"></span><h1>Specifically What You Get<a class="headerlink" href="#specifically-what-you-get" title="Permalink to this headline">¶</a></h1>
+<p>A basic LAMP setup</p>
+<ul class="simple">
+<li>Apache HTTPD 2.2.x</li>
+<li>PHP 5.3.x</li>
+<li>MySQL 5.1.x</li>
+</ul>
+<p>An email server setup</p>
+<ul class="simple">
+<li>Postfix SMTP</li>
+<li>Dovecot SASL</li>
+<li>Dovecot IMAP/POP3</li>
+</ul>
+<p>A repository server</p>
+<ul class="simple">
+<li>git</li>
+<li>gitolite</li>
+<li>subversion</li>
+<li>subversion webdav</li>
+</ul>
+<p>Other web server related goodies</p>
+<ul class="simple">
+<li>Nginx 0.9.x</li>
+<li>Python 2.6 and <tt class="docutils literal"><span class="pre">virtualenv</span></tt></li>
+<li>Ruby 1.8.x and <tt class="docutils literal"><span class="pre">rvm</span></tt></li>
+<li>PostgreSQL 8.4</li>
+<li>SQLite 3</li>
+</ul>
+</div>
+<div class="section" id="using-a-virtual-machine">
+<span id="virtual-machine"></span><h1>Using a Virtual Machine<a class="headerlink" href="#using-a-virtual-machine" title="Permalink to this headline">¶</a></h1>
+<p>If  you are  just  setting  up a  dev  server  on a  virtual
+machine,  then most  likely you&#8217;ve  installed Ubuntu  Server
+10.10 and  it didn&#8217;t come  with a  root password but  only a
+regular user account with sudo  and that&#8217;s not yet supported
+by this fabfile</p>
+<p>The good  news, however, is  that adding a password  to your
+root account is actually fairly easy, something like:</p>
+<div class="highlight-python"><pre>user@somehost ~$ sudo su -
+root@somehost ~# passwd YOURROOTPASSWORDHERE</pre>
+</div>
+<p>and then you&#8217;ll be able to actually log in as the root user.
+this  should work  well if  you&#8217;re using  this on  a virtual
+machine for development.</p>
+</div>
+<div class="section" id="full-documentation">
+<span id="documentation-index"></span><h1>Full Documentation<a class="headerlink" href="#full-documentation" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="settings.html">Settings</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="settings.html#general">General</a></li>
+<li class="toctree-l2"><a class="reference internal" href="settings.html#web-server">Web Server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="settings.html#user">User</a></li>
+<li class="toctree-l2"><a class="reference internal" href="settings.html#git-repositories">Git Repositories</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="config_dir.html">Configuration Directory</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="config_dir.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="config_dir.html#apache">Apache</a></li>
+<li class="toctree-l2"><a class="reference internal" href="config_dir.html#nginx">Nginx</a></li>
+<li class="toctree-l2"><a class="reference internal" href="config_dir.html#gitolite">Gitolite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="config_dir.html#custom-prefab-users">Custom Prefab Users</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tasks.html">Tasks</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tasks.html#tasks-overview">Tasks Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tasks.html#venturing-outside-the-box">Venturing Outside The Box</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tasks.html#task-api">Task API</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><a class="reference internal" href="genindex.html"><em>Index</em></a></li>
+<li><a class="reference internal" href="py-modindex.html"><em>Module Index</em></a></li>
+<li><a class="reference internal" href="search.html"><em>Search Page</em></a></li>
+</ul>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="#">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Ubuntu Server In A Box Fabfile</a></li>
+<li><a class="reference internal" href="#what-is-it">What Is It?</a></li>
+<li><a class="reference internal" href="#quick-start">Quick Start</a></li>
+<li><a class="reference internal" href="#requirements">Requirements</a></li>
+<li><a class="reference internal" href="#basic-usage">Basic Usage</a></li>
+<li><a class="reference internal" href="#complete-install-instructions">Complete Install Instructions</a></li>
+<li><a class="reference internal" href="#what-it-does">What It Does</a></li>
+<li><a class="reference internal" href="#what-you-get">What You Get</a></li>
+<li><a class="reference internal" href="#specifically-what-you-get">Specifically What You Get</a></li>
+<li><a class="reference internal" href="#using-a-virtual-machine">Using a Virtual Machine</a></li>
+<li><a class="reference internal" href="#full-documentation">Full Documentation</a><ul>
+</ul>
+</li>
+<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
+</ul>
+
+  <h4>Next topic</h4>
+  <p class="topless"><a href="settings.html"
+                        title="next chapter">Settings</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/index.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="settings.html" title="Settings"
+             >next</a> |</li>
+        <li><a href="#">Ubuntu Server In A Box v0.0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011, Vaughn Draughon.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>

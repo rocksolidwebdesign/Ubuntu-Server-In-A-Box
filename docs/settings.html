@@ -1,0 +1,222 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Settings &mdash; Ubuntu Server In A Box v0.0.1 documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Ubuntu Server In A Box v0.0.1 documentation" href="index.html" />
+    <link rel="next" title="Configuration Directory" href="config_dir.html" />
+    <link rel="prev" title="Ubuntu Server In A Box Fabfile" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="config_dir.html" title="Configuration Directory"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Ubuntu Server In A Box Fabfile"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Ubuntu Server In A Box v0.0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="settings">
+<h1>Settings<a class="headerlink" href="#settings" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="general">
+<span id="id1"></span><h2>General<a class="headerlink" href="#general" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">single_user_mode</span></tt></dt>
+<dd><p class="first">If you are never going to really have any other users except root
+and the web server user, then choose single_user_mode</p>
+<p>This will result in only a single extra user, the deploy user
+being created. The deploy user will own and have full access to
+the webroot and vhost config directories and the deploy user
+will have full sudo privileges.</p>
+<p class="last">you can still install other team members in deploy mode</p>
+</dd>
+<dt><tt class="docutils literal"><span class="pre">remote_backup_dir</span></tt>, <tt class="docutils literal"><span class="pre">remote_config_dir</span></tt></dt>
+<dd>These are the commands your deploy user can run, basically
+to allow restarting the web server and other common web
+server related tasks. You should choose a directory
+that does not yet exist for these settings.</dd>
+<dt><tt class="docutils literal"><span class="pre">local_config_dir</span></tt></dt>
+<dd>This is the path to your server configuration files. these
+files let you customize the resulting server to fit your
+tastes e.g. automatic install of your hosts and users just
+by filling out the config directory. see <a class="reference internal" href="config_dir.html"><em>Configuration Directory</em></a>
+for an explanation of how these files are used and what
+you can do with them.</dd>
+</dl>
+</div>
+<div class="section" id="web-server">
+<span id="id2"></span><h2>Web Server<a class="headerlink" href="#web-server" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">webroot_dir</span></tt></dt>
+<dd>The root directory for served file to the web
+this directory will be backed up if it exists
+and created if it does not exist</dd>
+<dt><tt class="docutils literal"><span class="pre">server_domain</span></tt></dt>
+<dd>The top level domain name of the server you&#8217;ll actually be running</dd>
+<dt><tt class="docutils literal"><span class="pre">server_hostname</span></tt></dt>
+<dd>The specific hostname of the server you&#8217;ll actually be running</dd>
+<dt><tt class="docutils literal"><span class="pre">server_groupname</span></tt></dt>
+<dd>The unix group name under which the web server runs</dd>
+</dl>
+</div>
+<div class="section" id="user">
+<span id="id3"></span><h2>User<a class="headerlink" href="#user" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">python_environment_dir</span></tt></dt>
+<dd>The name of the directory where each user will
+store their virtualenvironments</dd>
+<dt><tt class="docutils literal"><span class="pre">main_username</span></tt>, <tt class="docutils literal"><span class="pre">main_password</span></tt></dt>
+<dd><p class="first">This is your main username - you, the person who will
+be running this fabfile. so for example &#8216;john&#8217; or &#8216;mary&#8217;
+&#8216;superhacker&#8217;, &#8216;mrcool&#8217; or whatever username you want.</p>
+<p class="last">If you&#8217;r installing via sudo this should be the username
+of the user who has those sudo privileges. for example
+if you&#8217;re installing to a virtual machine</p>
+</dd>
+<dt><tt class="docutils literal"><span class="pre">deploy_username</span></tt>, <tt class="docutils literal"><span class="pre">deploy_password</span></tt></dt>
+<dd>The deploy user is your &#8220;everything web&#8221; user. your
+deploy user will own all the files that belong to
+your actual websites, your deploy user will be
+able to restart the web server and add vhosts
+without requiring a password</dd>
+<dt><tt class="docutils literal"><span class="pre">team_groupname</span></tt>, <tt class="docutils literal"><span class="pre">team_password</span></tt>, <tt class="docutils literal"><span class="pre">team_users</span></tt></dt>
+<dd>If you have a list of other users, probably
+developers who will need shell accounts then</dd>
+<dt><tt class="docutils literal"><span class="pre">team_sudo_cmds</span></tt></dt>
+<dd>These are the commands your deploy user can run, basically
+to allow restarting the web server and other common web
+server related tasks</dd>
+<dt><tt class="docutils literal"><span class="pre">vim_config_tarball</span></tt></dt>
+<dd><p class="first">If you want a custom vim configuration installed for your
+users, system wide you can use this one, otherwise, you
+could of course put your own in the <tt class="docutils literal"><span class="pre">conf/skel</span></tt> directory</p>
+<p class="last">If you want your own system wide vim config just point this
+to the URL of a tarball that contains simply a
+<tt class="docutils literal"><span class="pre">.vim</span></tt> folder and <tt class="docutils literal"><span class="pre">.vimrc</span></tt> file</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="git-repositories">
+<span id="git"></span><h2>Git Repositories<a class="headerlink" href="#git-repositories" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">gitolite_admin_local_dir</span></tt>, <tt class="docutils literal"><span class="pre">gitolite_admin_user</span></tt>, <tt class="docutils literal"><span class="pre">gitolite_admin_email</span></tt></dt>
+<dd>You will need to checkout the gitolite admin repo
+on to your local computer to add the keys for the deploy
+user so that the deploy user can checkout your projects
+in to your various webroot folders</dd>
+<dt><tt class="docutils literal"><span class="pre">git_repo_admins</span></tt></dt>
+<dd>usernames of the users who are actually allowed to admin and
+maintain the repositories and who has access to them</dd>
+<dt><tt class="docutils literal"><span class="pre">git_repo_devteam</span></tt></dt>
+<dd>these are your actual developers who will need commit
+access to your repositories</dd>
+<dt><tt class="docutils literal"><span class="pre">git_hosted_repos</span></tt></dt>
+<dd>this is your list of git repositories</dd>
+</dl>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Settings</a><ul>
+<li><a class="reference internal" href="#general">General</a></li>
+<li><a class="reference internal" href="#web-server">Web Server</a></li>
+<li><a class="reference internal" href="#user">User</a></li>
+<li><a class="reference internal" href="#git-repositories">Git Repositories</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Ubuntu Server In A Box Fabfile</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="config_dir.html"
+                        title="next chapter">Configuration Directory</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/settings.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="config_dir.html" title="Configuration Directory"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Ubuntu Server In A Box Fabfile"
+             >previous</a> |</li>
+        <li><a href="index.html">Ubuntu Server In A Box v0.0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011, Vaughn Draughon.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>

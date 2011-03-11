@@ -1,0 +1,17 @@
+<VirtualHost *>
+    ServerName django.SERVERDOMAINNAME
+    ServerAdmin webmaster@localhost
+
+    DocumentRoot SERVERWEBROOT/apache/django.SERVERDOMAINNAME/public
+    <Directory SERVERWEBROOT/apache/django.SERVERDOMAINNAME/public/>
+        Options FollowSymLinks
+        AllowOverride All
+    </Directory>
+
+    LogLevel warn
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+    ProxyPass / http://127.0.0.1:8000/
+    ProxyPassReverse / http://127.0.0.1:8000/
+</VirtualHost>

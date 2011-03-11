@@ -1,0 +1,293 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Configuration Directory &mdash; Ubuntu Server In A Box v0.0.1 documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Ubuntu Server In A Box v0.0.1 documentation" href="index.html" />
+    <link rel="next" title="Tasks" href="tasks.html" />
+    <link rel="prev" title="Settings" href="settings.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="tasks.html" title="Tasks"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="settings.html" title="Settings"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Ubuntu Server In A Box v0.0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="configuration-directory">
+<h1>Configuration Directory<a class="headerlink" href="#configuration-directory" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="overview">
+<span id="custom-configuration"></span><h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<p>There  is some  custom stuff  going on  with the  web server
+that&#8217;s not completely available through the settings file.</p>
+<p>You can add your own users and vhosts simply by adding their
+respective files to the configuration directory.</p>
+<p>The default config directory is:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">conf</span><span class="o">/</span><span class="n">maverick_cloud</span>
+</pre></div>
+</div>
+<p>but you  can use  your own  in, see  <tt class="docutils literal"><span class="pre">local_config_dir</span></tt> in
+<a class="reference internal" href="settings.html"><em>Settings</em></a> The  idea here is  to leave room  for future
+distributions and  versions and  particular user,  group and
+vhost layouts.</p>
+<p>To do anything more complicated than what is available through
+these config files you&#8217;ll need to modify the fab tasks themselves
+which you can get a good feel for by reading their descriptive
+overviews here: <a class="reference internal" href="tasks.html"><em>Tasks</em></a></p>
+<div class="section" id="config-file-templates">
+<span id="id1"></span><h3>Config File Templates<a class="headerlink" href="#config-file-templates" title="Permalink to this headline">¶</a></h3>
+<p>Most of this config magic is actually achieved through the
+use of some primitive templating with <tt class="docutils literal"><span class="pre">sed</span></tt></p>
+<p>For most (all?) used config files there is a corresponding
+template that includes placeholders for the hostname, so
+you can point this at various different computers and
+just let it go.</p>
+</div>
+</div>
+<div class="section" id="apache">
+<span id="apache-vhosts"></span><h2>Apache<a class="headerlink" href="#apache" title="Permalink to this headline">¶</a></h2>
+<p>All the vhost files for apache live in the config folder</p>
+<p><tt class="docutils literal"><span class="pre">conf/maverick_cloud/apache</span></tt></p>
+<div class="section" id="the-hosts-you-want">
+<h3>The Hosts You Want<a class="headerlink" href="#the-hosts-you-want" title="Permalink to this headline">¶</a></h3>
+<p>Just add your extra vhosts to <tt class="docutils literal"><span class="pre">vhost_templates</span></tt></p>
+<p>There are actually two directories for vhosts here</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">sites-available</span></tt> This is the folder that actually gets copied</li>
+<li><tt class="docutils literal"><span class="pre">vhost_templates</span></tt> These templates are used to generate the actual config files</li>
+</ul>
+<p>The <tt class="docutils literal"><span class="pre">sites-available</span></tt> folder is indeed where the actual vhost
+files are copied from when they&#8217;re put on the server, however
+this folder is also cleaned out with the clean commands fab clean
+and</p>
+</div>
+<div class="section" id="the-hosts-you-get-already">
+<h3>The Hosts You Get Already<a class="headerlink" href="#the-hosts-you-get-already" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">default</span></tt> Served on the main domain from the setting <tt class="docutils literal"><span class="pre">server_domain</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">default-ssl</span></tt> SSL Served on the main domain from the setting <tt class="docutils literal"><span class="pre">server_domain</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">default-ssl-nginx</span></tt> As above but served on 4433, meant to be reverse proxied with nginx</li>
+<li><tt class="docutils literal"><span class="pre">php_generator</span></tt> The PHP script from generatedata.com</li>
+<li><tt class="docutils literal"><span class="pre">proxy_django</span></tt> Django dev server available through <tt class="docutils literal"><span class="pre">django.server_domain</span></tt> e.g. <a class="reference external" href="http://django.mysite.com">http://django.mysite.com</a></li>
+<li><tt class="docutils literal"><span class="pre">proxy_rails</span></tt> Available through <tt class="docutils literal"><span class="pre">rails.server_domain</span></tt> e.g. <a class="reference external" href="http://rails.mysite.com">http://rails.mysite.com</a></li>
+</ul>
+</div>
+<div class="section" id="toggling-reverse-proxy-mode">
+<h3>Toggling Reverse Proxy Mode<a class="headerlink" href="#toggling-reverse-proxy-mode" title="Permalink to this headline">¶</a></h3>
+<p>This config is primarily oriented towards
+allowing you to quickly and easily switch
+back and forth between Apache as the primary server
+and Apache being served from behind an Nginx reverse
+proxy.</p>
+<p><em>TODO: A fab task should probably be added for this.</em></p>
+<p>You will need to be manually logged in to the remote
+server with root privileges.</p>
+<p>Here&#8217;s how to toggle the reverse proxying:</p>
+<ul>
+<li><p class="first">Swap the apache <tt class="docutils literal"><span class="pre">ports.conf</span></tt> symlink</p>
+<blockquote>
+<div><ul class="simple">
+<li><tt class="docutils literal"><span class="pre">/etc/apache2/ports.master.conf</span></tt> Runs everything on ports 80 and 443 for SSL</li>
+<li><tt class="docutils literal"><span class="pre">/etc/apache2/ports.behind_nginx.conf</span></tt> Runs everything on ports 8080 and 4433 for SSL</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">Swap the apache ssl vhost</p>
+<blockquote>
+<div><ul class="simple">
+<li>Choose the relevant option between <tt class="docutils literal"><span class="pre">default-ssl</span></tt> and
+<tt class="docutils literal"><span class="pre">default-ssl-nginx</span></tt>. <em>Hint:  if you&#8217;re  putting Apache
+behind Nginx then choose default-ssl-nginx.</em></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">Enable the nginx vhosts</p>
+</li>
+<li><p class="first">Restart Apache</p>
+</li>
+<li><p class="first">Restart Nginx</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="nginx">
+<span id="nginx-vhosts"></span><h2>Nginx<a class="headerlink" href="#nginx" title="Permalink to this headline">¶</a></h2>
+<p>Configuration style here is basically identical to <a class="reference internal" href="#apache-vhosts"><em>Apache</em></a></p>
+<p>All the vhost files for nginx live in the config folder</p>
+<p><tt class="docutils literal"><span class="pre">conf/maverick_cloud/nginx</span></tt></p>
+<div class="section" id="id2">
+<h3>The Hosts You Get Already<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">proxy_apache</span></tt> Pass all requests through to the proper Apache vhost on port 8080</li>
+<li><tt class="docutils literal"><span class="pre">proxy_apache_ssl</span></tt> Runs on SSL and passes all requests through to port 4433</li>
+<li><tt class="docutils literal"><span class="pre">proxy_wsgi</span></tt> Django dev server available through <tt class="docutils literal"><span class="pre">django.server_domain</span></tt> e.g. <a class="reference external" href="http://django.mysite.com">http://django.mysite.com</a></li>
+<li><tt class="docutils literal"><span class="pre">proxy_passenger</span></tt> Available through <tt class="docutils literal"><span class="pre">rails.server_domain</span></tt> e.g. <a class="reference external" href="http://rails.mysite.com">http://rails.mysite.com</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="gitolite">
+<span id="gitolite-pubkeys"></span><h2>Gitolite<a class="headerlink" href="#gitolite" title="Permalink to this headline">¶</a></h2>
+<p>Gitolite is  primarily configured  from within  the settings
+file but your gitolite developers and collaborators won&#8217;t be
+added  to the  repos unless  their keys  are present  in the
+<tt class="docutils literal"><span class="pre">conf/maverick_cloud/keys/gitolite</span></tt> dir.</p>
+<p>Public  keys  follow the  simple  naming  convention of  the
+person&#8217;s username with a  <tt class="docutils literal"><span class="pre">.pub</span></tt> ending. Simply gather the
+public keys  of your users  (or generate them if  they don&#8217;t
+exist,  for that  matter)  and place  them  in the  gitolite
+public keys folder <tt class="docutils literal"><span class="pre">conf/maverick_cloud/keys/gitolite</span></tt>.</p>
+</div>
+<div class="section" id="custom-prefab-users">
+<span id="user-skeleton"></span><h2>Custom Prefab Users<a class="headerlink" href="#custom-prefab-users" title="Permalink to this headline">¶</a></h2>
+<p>That awesome  bash prompt comes from  the preconfigured home
+directory skeleton in <tt class="docutils literal"><span class="pre">conf/maverick_cloud/skel</span></tt></p>
+<p>All the  files in there  are hidden  so if the  folder looks
+empty to you be sure you&#8217;re showing hidden files.</p>
+<p>This config does two main things</p>
+<ul class="simple">
+<li>It tries to accomodate RVM and virtualenv</li>
+<li>It tries to accomodate extra login specific customizations</li>
+</ul>
+<p>The  first  modification  is   the  addition  of  a  special
+conditional   statement   surrounding   the  bulk   of   the
+<tt class="docutils literal"><span class="pre">~/.bashrc</span></tt>  so that  the rvm  and virtualenv  always work
+even for non interactive shells.</p>
+<p>This is important if you want future fab tasks to be able to
+make use of your rvm and virtualenv settings.</p>
+<p>The   second   modification   consists  primarily   of   the
+<tt class="docutils literal"><span class="pre">~/.colors_prompts</span></tt>  and <tt class="docutils literal"><span class="pre">~/.bash_prompt</span>&nbsp; <span class="pre">file</span></tt> both  of
+which are included by the <tt class="docutils literal"><span class="pre">~/.bashrc</span></tt> if they exist.</p>
+<p>The  <tt class="docutils literal"><span class="pre">~/.colors_prompts</span></tt>  is  in fact  named  clumsily  on
+purpose because  it does actually contain  nothing more than
+code that defines colors and  prompts. The colors gives us a
+flavorful and  powerful menu  from which  to build  a custom
+prompt if we wish and it  comes with two prompts already pre
+built for you, one for regular user accounts and another for
+the root  account that makes  the entire host string  red to
+alert  you that  you&#8217;re root  in  the hopes  that this  will
+somehow prevent stupid things from happening.</p>
+<p>The  <tt class="docutils literal"><span class="pre">~/.bash_prompt</span></tt> file  is where  you actually  choose
+your prompt by setting the <tt class="docutils literal"><span class="pre">$PS1</span></tt> environment variable and
+just trust me that  the separation between prompt generation
+and prompt selection is a good thing.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Configuration Directory</a><ul>
+<li><a class="reference internal" href="#overview">Overview</a><ul>
+<li><a class="reference internal" href="#config-file-templates">Config File Templates</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#apache">Apache</a><ul>
+<li><a class="reference internal" href="#the-hosts-you-want">The Hosts You Want</a></li>
+<li><a class="reference internal" href="#the-hosts-you-get-already">The Hosts You Get Already</a></li>
+<li><a class="reference internal" href="#toggling-reverse-proxy-mode">Toggling Reverse Proxy Mode</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#nginx">Nginx</a><ul>
+<li><a class="reference internal" href="#id2">The Hosts You Get Already</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#gitolite">Gitolite</a></li>
+<li><a class="reference internal" href="#custom-prefab-users">Custom Prefab Users</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="settings.html"
+                        title="previous chapter">Settings</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="tasks.html"
+                        title="next chapter">Tasks</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/config_dir.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="tasks.html" title="Tasks"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="settings.html" title="Settings"
+             >previous</a> |</li>
+        <li><a href="index.html">Ubuntu Server In A Box v0.0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011, Vaughn Draughon.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>
