@@ -1,6 +1,6 @@
 # These settings are listed in what I believe to be an order
 # that reflects the settings most likely to change.
-# Full documentation in docs/html/settings.html
+# Full documentation in docs/settings.html
 
 # You should at least provide a hostname in FQDN format!
 #################################################################
@@ -32,8 +32,20 @@ single_user_mode = False
 # graceful mode
 from fabric.api import *
 if not (len(server_hostname) and len(server_domain)):
+    print """
+        It  looks like  this is  the first  time
+        you've run this  program. To get started
+        you'll  need root access and a  hostname
+
+        Your hostname must be in FQDN format.
+
+        To make this message go away:
+            * Put your hostname in settings.py
+
+    """
+
     server_hostname = prompt(
-        'What is your hostname? (Must be the FQDN)', 
+        'What is your hostname?', 
         default='thundercloud.mycorp.dyndns.org',
         validate=r'^([-a-zA-Z_]+?\.)+([-a-zA-Z_]+)$')
     server_domain = server_hostname.partition('.')[2]
@@ -76,7 +88,7 @@ team_sudo_cmds = [
     "/usr/sbin/service apache2 stop"
 ]
 
-local_config_dir  = '../../conf/maverick_cloud'
+local_config_dir  = './conf'
 remote_backup_dir = '/var/dumps/maverick_cloud_fabfile'
 remote_config_dir = '/var/local/maverick_cloud_fabfile'
 

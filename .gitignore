@@ -1,7 +1,7 @@
-quickfab/ubuntu/settings.py
-conf/gitolite.conf
-conf/apache/localhost/public.tar.gz
-conf/apache/vhosts.tar.gz
-conf/nginx/vhosts.tar.gz
-conf/skel.tar.gz
-keys/*
+maverick_cloud/settings.py
+maverick_cloud/conf/gitolite.conf
+maverick_cloud/conf/apache/localhost/public.tar.gz
+maverick_cloud/conf/apache/sites-available.tar.gz
+maverick_cloud/conf/nginx/sites-available.tar.gz
+maverick_cloud/conf/skel.tar.gz
+maverick_cloud/conf/keys/*

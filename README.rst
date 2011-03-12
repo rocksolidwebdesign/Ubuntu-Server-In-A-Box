@@ -1,6 +1,12 @@
 A python script to automatically install and set up a full featured
 server including web, mail and git repositories.
 
+Quick Install::
+
+    bash < <( curl http://github.com/rocksolidwebdesign/Ubuntu-Server-In-A-Box/raw/master/download-install )
+
+If that doesn't work for you then everything you need should be covered in the main documentation.
+
 * `Documentation <https://github.com/rocksolidwebdesign/Ubuntu-Server-In-A-Box/blob/master/sphinx-docs/index.rst>`_
 
     * `Settings <https://github.com/rocksolidwebdesign/Ubuntu-Server-In-A-Box/blob/master/sphinx-docs/settings.rst>`_
