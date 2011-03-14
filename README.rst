@@ -14,6 +14,7 @@ Quick Install
 
 To take a quick test drive use this script. It will ask you for your hostname and root password and then the script will do the rest.
 
+for example::
     bash < <( curl https://github.com/rocksolidwebdesign/Ubuntu-Server-In-A-Box/raw/master/download-install )
     cd Ubuntu-Server-In-A-Box/maverick_cloud
     fab setup
