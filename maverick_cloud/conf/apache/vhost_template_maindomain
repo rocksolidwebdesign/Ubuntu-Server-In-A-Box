@@ -1,10 +1,11 @@
 <VirtualHost *>
-    ServerName SERVERHOSTNAME.SERVERDOMAINNAME
+    ServerName SERVERDOMAINNAME
     ServerAdmin webmaster@localhost
 
-    DocumentRoot SERVERWEBROOT/apache/SERVERHOSTNAME.SERVERDOMAINNAME/public
-    <Directory SERVERWEBROOT/apache/SERVERHOSTNAME.SERVERDOMAINNAME/public/>
+    DocumentRoot SERVERWEBROOT/apache/SERVERDOMAINNAME/public
+    <Directory SERVERWEBROOT/apache/SERVERDOMAINNAME/public/>
         # Directory Settings
+        Options FollowSymLinks
         AllowOverride All
     </Directory>
 

@@ -1,8 +1,63 @@
-=======================
-Configuration Directory
-=======================
+=============
+Configuration
+=============
 
 .. _custom-configuration:
+
+Basic Project Layout
+====================
+
+First off, the latest docs can always be found in the docs folder::
+
+    docs/index.html
+
+There are three main components to the layout of this system and
+how the code is setup and structured::
+
+    maverick_cloud/fabfile.py
+    maverick_cloud/settings.py
+    maverick_cloud/conf/
+
+The ``maverick_cloud/fabfile.py`` is the actual fabfile.
+
+``maveric_cloud/settings.py``   and  ``maveric_cloud/conf/``
+are the files you can use  to customize your install to your
+specific projects and team of users.
+
+Layout Goals
+------------
+
+This layout  was chosen  primarily with future  expansion in
+mind,  such that  the next  step would  be to  add different
+distributions and hardware targets.
+
+Right  now  the  default  for   this  system  is  an  Ubuntu
+10.10  system  on  a   Rackspace  Cloud  Server,  hence  the
+``maverick`` for  Ubuntu 10.10  and ``cloud``  for Rackspace
+Cloud, resulting  in ``maverick_cloud`` as the  name of this
+particular fabfile.
+
+The next step is to make e.g. ``maverick_vm`` to encapsulate
+the  minute differences  between installing  with a  literal
+root  account  and  installing  from  a  more  debian  style
+privileged user with sudo.
+
+And  then on  to  something like  ``centos_cloud`` or  maybe
+``fedora_amazon``
+
+Because ``maverick_cloud`` is a  python module, it should be
+fairly trivial to make  e.g. ``fedora_cloud`` manually brute
+force style, and then take a  list of things that are common
+between  the two  systems  and  package that  in  to a  base
+package like ``cloud_utilities`` or some such.
+
+Prime candidates for this type of packaging would be general
+user administration utilities that  are not likely to change
+between systems. Also some  things like apache configuration
+can probably  be abstracted  simply by adding  some settings
+like ``apache_config_dir`` or the like.
+
+.. _configuration-overview:
 
 Overview
 ========
@@ -15,17 +70,17 @@ respective files to the configuration directory.
 
 The default config directory is::
 
-    conf/maverick_cloud
+    maverick_cloud/conf
 
 but you  can use  your own  in, see  ``local_config_dir`` in
 :doc:`settings` The  idea here is  to leave room  for future
 distributions and  versions and  particular user,  group and
 vhost layouts.
 
-To do anything more complicated than what is available through
-these config files you'll need to modify the fab tasks themselves
-which you can get a good feel for by reading their descriptive
-overviews here: :doc:`tasks`
+To  do  anything more  complicated  than  what is  available
+through these  config files  you'll need  to modify  the fab
+tasks  themselves which  you  can  get a  good  feel for  by
+reading their descriptive overviews here: :doc:`tasks`
 
 .. _config-file-templates:
 
@@ -47,7 +102,7 @@ Apache
 
 All the vhost files for apache live in the config folder
 
-``conf/maverick_cloud/apache``
+``maverick_cloud/conf/apache``
 
 The Hosts You Want
 ------------------
@@ -111,7 +166,7 @@ Configuration style here is basically identical to :ref:`apache-vhosts`
 
 All the vhost files for nginx live in the config folder
 
-``conf/maverick_cloud/nginx``
+``maverick_cloud/conf/nginx``
 
 The Hosts You Get Already
 -------------------------
@@ -128,13 +183,13 @@ Gitolite
 Gitolite is  primarily configured  from within  the settings
 file but your gitolite developers and collaborators won't be
 added  to the  repos unless  their keys  are present  in the
-``conf/maverick_cloud/keys/gitolite`` dir.
+``maverick_cloud/conf/keys/gitolite`` dir.
 
 Public  keys  follow the  simple  naming  convention of  the
 person's username with a  ``.pub`` ending. Simply gather the
 public keys  of your users  (or generate them if  they don't
 exist,  for that  matter)  and place  them  in the  gitolite
-public keys folder ``conf/maverick_cloud/keys/gitolite``.
+public keys folder ``maverick_cloud/conf/keys/gitolite``.
 
 .. _user-skeleton:
 
@@ -142,7 +197,7 @@ Custom Prefab Users
 ===================
 
 That awesome  bash prompt comes from  the preconfigured home
-directory skeleton in ``conf/maverick_cloud/skel``
+directory skeleton in ``maverick_cloud/conf/skel``
 
 All the  files in there  are hidden  so if the  folder looks
 empty to you be sure you're showing hidden files.
@@ -178,3 +233,24 @@ The  ``~/.bash_prompt`` file  is where  you actually  choose
 your prompt by setting the ``$PS1`` environment variable and
 just trust me that  the separation between prompt generation
 and prompt selection is a good thing.
+
+.. _sphinx-docs:
+
+Writing Documentation
+=====================
+
+If you  don't plan on  editing the documentation  then don't
+worry about the  ``sphinx-docs`` folder. The ``sphinx-docs``
+folder is where  all the source files  for the documentation
+live  -   the  documentation   that  you're   reading  right
+now.  The  documentation  is  written  in  reST  format  aka
+reStructuredText, the  default format  of the  python sphinx
+documentation generator.
+
+The build command that I use to regenerate the docs is::
+
+    sphinx-build -b html . ../docs
+
+The ``maverick_cloud`` folder itself is actually a python
+module and this makes it easy to include the code from the
+fabfile in the docs.

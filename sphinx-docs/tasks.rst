@@ -45,7 +45,7 @@ themselves.
 
 To  get an  idea  of  how to  modify  these  tasks, I  would
 recommend  reading the  Task API  and then  also looking  at
-:doc:`config_dir`
+:doc:`configuration`
 
 If  you want  to  for  example change  the  way gitolite  or
 Apache adds  users and  vhosts, you'll want  to look  at the
@@ -74,5 +74,5 @@ Here is the documentation for each fab task that is available
 
 You can of course, also see this list with ``fab --list``
 
-.. automodule:: quickfab.ubuntu.fabfile
+.. automodule:: maverick_cloud.fabfile
     :members:

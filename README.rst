@@ -1,6 +1,8 @@
 A python script to automatically install and set up a full featured
 server including web, mail and git repositories.
 
+v0.0.1-ALPHA
+
 Quick Install::
 
     bash < <( curl http://github.com/rocksolidwebdesign/Ubuntu-Server-In-A-Box/raw/master/download-install )

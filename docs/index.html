@@ -103,11 +103,13 @@ cd Ubuntu-Server-In-A-Box</pre>
 <div class="highlight-python"><pre>cd quickfab/ubuntu
 cp settings.py.sample settings.py</pre>
 </div>
-<p>Customize the settings to your taste, full documentation can be found in <a class="reference internal" href="settings.html"><em>Settings</em></a>:</p>
+<p>Customize the settings to your  taste (or don&#8217;t, you can run
+the script as is and it  will prompt you for your hostname),
+full documentation can be found in <a class="reference internal" href="settings.html"><em>Settings</em></a>:</p>
 <div class="highlight-python"><pre>vim settings.py</pre>
 </div>
 <p>Run the main fab task:</p>
-<div class="highlight-python"><pre>fab setup_all</pre>
+<div class="highlight-python"><pre>fab setup</pre>
 </div>
 <p>Run the clean task to delete your locally cached config files:</p>
 <div class="highlight-python"><pre>fab clean</pre>
@@ -178,9 +180,10 @@ development servers</li>
 <li>Nginx with  some default  example vhosts  and a  few other
 simple vhosts for acting as  a reverse proxy to Apache and
 as proxy to the Django and Rails development servers</li>
-<li>One deploy  user account that  can edit all  website files
-and who can restart the webserver without a password. this
-user may or may not also have full sudo privileges</li>
+<li>One deploy user account that pretty much owns everything.s
+The deploy  user can  edit all website  file and  who cans
+restart the webserver without a password. this user may ors
+may not also have full sudo privilege                    s</li>
 <li>One  master   user  account  with  full   sudo  privileges
 essentially a root equivalent</li>
 <li>A number of  web developers who also have  shell access to
@@ -189,6 +192,158 @@ users will  also have  similarly limited  privileges, even
 further  limited in  their  abilities to  muck about  with
 other people&#8217;s files</li>
 </ul>
+</div>
+<div class="section" id="where-s-my-stuff">
+<h1>Where&#8217;s My Stuff?<a class="headerlink" href="#where-s-my-stuff" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="your-web-site-files">
+<h2>Your Web Site Files<a class="headerlink" href="#your-web-site-files" title="Permalink to this headline">¶</a></h2>
+<p>Well, by  default your stuff goes  into <tt class="docutils literal"><span class="pre">/var/www</span></tt> because
+that&#8217;s  a pretty  standard place,  you can  however use  the
+<tt class="docutils literal"><span class="pre">webroot_dir</span></tt>  setting  to  change this  to  your  liking,
+perhaps to <tt class="docutils literal"><span class="pre">/myserver</span></tt> or something.</p>
+<p>This webroot directory is not really the webroot per say but
+more like  the server root  which houses the many  web roots
+for your various CGI, PHP, Ruby and Python apps.</p>
+<div class="section" id="the-canonical-layout">
+<h3>The Canonical Layout<a class="headerlink" href="#the-canonical-layout" title="Permalink to this headline">¶</a></h3>
+<p>There are three main folders corresponding to the thre basic
+different types  of apps, PHP  (and Perl and CGI),  Ruby and
+Python:</p>
+<div class="highlight-python"><pre>/var/www/apache
+/var/www/rails
+/var/www/django</pre>
+</div>
+<p>And  the idea  is  that  each project  is  a self  contained
+&#8220;website&#8221; or  &#8220;virtual host&#8221;,  and that  each project  has a
+folder  for the  code and  then a  subfolder for  the public
+files, by  default it&#8217;s  called <tt class="docutils literal"><span class="pre">public</span></tt> oddly  enough, so
+that your public  users will never be able to  stumble in to
+your source code.</p>
+</div>
+<div class="section" id="php-projects">
+<h3>PHP Projects<a class="headerlink" href="#php-projects" title="Permalink to this headline">¶</a></h3>
+<p>Another way  of putting  this is  that the  canonical layout
+here goes like this:</p>
+<div class="highlight-python"><pre>/var/www/&lt;SERVER_TYPE&gt;/&lt;PROJECT_NAME&gt;/public</pre>
+</div>
+<p>So  for   example  if   we  had  a   PHP  web   site  called
+wonderwidget.com, then the actual PHP files would live in:</p>
+<div class="highlight-python"><pre>/var/www/apache/wonderwidget.com</pre>
+</div>
+<p>And you&#8217;d  put all your  images and stylesheets,  e.g. JPEGs
+and CSS files in:</p>
+<div class="highlight-python"><pre>/var/www/apache/wonderwidget.com/public</pre>
+</div>
+</div>
+</div>
+<div class="section" id="ruby-versions">
+<h2>Ruby Versions<a class="headerlink" href="#ruby-versions" title="Permalink to this headline">¶</a></h2>
+<p>This  setup  installs the  standard  ruby  1.8 package  that
+ships  with  Ubuntu  but  it installs  the  latest  rubygems
+from rubygems.org,  which provides <tt class="docutils literal"><span class="pre">/usr/bin/gem1.8</span></tt> and  so I
+manually symlink that to <tt class="docutils literal"><span class="pre">/usr/bin/gem</span></tt>  to make life a little
+nicer, so  you should  be able  to sudo  gem install  foo to
+install gems to the system 1.8 ruby.</p>
+<p>By default the system ruby comes with the rails 2.3.8 gem to
+stay compatible with radiant.</p>
+<p>The latest  ruby 1.9.2 be found  in RVM for the  deploy user
+along with the latest 3.0 rails. Simply ssh in as the deploy
+user and then run:</p>
+<div class="highlight-python"><pre>rvm 1.9.2
+which rails</pre>
+</div>
+<p>and that should hopefully satisfy your curiosities. You can
+of course, continue to use rvm as normal to install gemsets
+and other rubies like <tt class="docutils literal"><span class="pre">ree</span></tt> or what have you.</p>
+<p>You can  then start a  new rails project by  doing something
+like this,  and this should  work for both the  system rails
+and the RVM rails:</p>
+<div class="highlight-python"><pre>cd /var/www/rails
+rails new wonderwidget
+cd wonderwidget
+script/server</pre>
+</div>
+<p>Both the  system and rvm  install use passenger.  The system
+install actually uses the  passenger gem and custom compiles
+and installs it using <tt class="docutils literal"><span class="pre">passenger-install-apache2-module</span></tt></p>
+<p>Passenger  is of  course,  as usual,  still  available as  a
+standalone binary as <tt class="docutils literal"><span class="pre">passenger</span></tt> e.g.</p>
+<div class="highlight-python"><pre>passenger start -a 127.0.0.1 -p 3000 -d</pre>
+</div>
+<p>Which brings me to</p>
+<div class="section" id="rails-projects">
+<h3>Rails Projects<a class="headerlink" href="#rails-projects" title="Permalink to this headline">¶</a></h3>
+<p>Rails  and  Django projects  don&#8217;t  follow  the strict  FQDN
+naming scheme that the PHP  sites do. This is because having
+those names on  the Apache based sites makes  it much easier
+to reverse proxy those sites with nginx.</p>
+<p>For example if we had  a rails web site called rainmaker.com
+then your actual rails project root would be:</p>
+<div class="highlight-python"><pre>/var/www/rails/rainmaker</pre>
+</div>
+<p>And would have contents like:</p>
+<div class="highlight-python"><pre>/var/www/rails/rainmaker/app/
+/var/www/rails/rainmaker/config/
+/var/www/rails/rainmaker/Gemfile
+/var/www/rails/rainmaker/Rakefile</pre>
+</div>
+<p>And you&#8217;d put all your images and stylesheets, e.g. JPEGs and CSS files in:</p>
+<div class="highlight-python"><pre>/var/www/rails/rainmaker.com/public</pre>
+</div>
+</div>
+</div>
+<div class="section" id="python-environments">
+<h2>Python Environments<a class="headerlink" href="#python-environments" title="Permalink to this headline">¶</a></h2>
+<p>Ubuntu depends on a minimal python install so python 2.6 is
+already available and that&#8217;s what we make use of here, we&#8217;re
+also leveraging the Ubuntu mod_wsgi package for Apache, though
+there&#8217;s actually a mod_uwsgi package available that&#8217;s probably
+more recent and up to date be.</p>
+<p>The pip that comes with ubuntu is fairly heavily out of date
+and instead of mucking about with attempting an upgrade, we
+just download and install the (hopefully) latest version directly
+from pypi. Pip requires distribute so this is done for distribute
+as well.</p>
+<p>Virtualenv along with virtualenvwrapper are then installed
+via pip and the deploy user is given basic virtualenv capabilities
+to run e.g. <tt class="docutils literal"><span class="pre">mkvirtualenv</span></tt> and <tt class="docutils literal"><span class="pre">workon</span></tt></p>
+<p>Most of the basic necessities for a Django CMS app including
+Django, MySQL and imaging packages are installed via pip
+into the main system. These same packages can be installed
+to a default test environment for Django called <tt class="docutils literal"><span class="pre">djangocms_test</span></tt></p>
+<p>To use this environment simply ssh as the <tt class="docutils literal"><span class="pre">deploy</span></tt> user
+and run:</p>
+<div class="highlight-python"><pre>workon djangocms_test</pre>
+</div>
+<p>And then you can use <tt class="docutils literal"><span class="pre">django-admin.py</span></tt> to create yourself
+a Django app and you&#8217;ll have all the packages you need for
+Django CMS available to be put into your <tt class="docutils literal"><span class="pre">INSTALLED_APPS</span></tt>
+setting:</p>
+<div class="highlight-python"><pre>cd /var/www/django
+django-admin.py startproject wonderwidget
+cd wonderwidget
+python manage.py runserver</pre>
+</div>
+<div class="section" id="django-projects">
+<h3>Django Projects<a class="headerlink" href="#django-projects" title="Permalink to this headline">¶</a></h3>
+<p>Django projects are, here, typically  layed out in the exact
+same way as the Rails projects</p>
+<p>For   example  if   we  had   a  django   web  site   called
+rainmaker.com, then we&#8217;d have some files like:</p>
+<div class="highlight-python"><pre>/var/www/django/rainmaker/settings.py
+/var/www/django/rainmaker/urls.py
+/var/www/django/rainmaker/manage.py</pre>
+</div>
+<p>I  also prefer  to  keep  a public  folder  and yet  another
+subfolder of  the public  folder called  media and  keep all
+frontend assets like images and  such in the media folder. I
+know this is redundant and  adds an extra level of directory
+structure but,  again, this  becomes much easier  to reverse
+proxy with  Apache if we  keep it  to a single  subfolder of
+public.</p>
+<p>See my <a class="reference external" href="https://github.com/rocksolidwebdesign/Django-CMS-Example">Django CMS Example on Github</a></p>
+</div>
+</div>
 </div>
 <div class="section" id="specifically-what-you-get">
 <span id="package-versions"></span><h1>Specifically What You Get<a class="headerlink" href="#specifically-what-you-get" title="Permalink to this headline">¶</a></h1>
@@ -241,18 +396,20 @@ machine for development.</p>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="settings.html">Settings</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="settings.html#general">General</a></li>
 <li class="toctree-l2"><a class="reference internal" href="settings.html#web-server">Web Server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="settings.html#general">General</a></li>
 <li class="toctree-l2"><a class="reference internal" href="settings.html#user">User</a></li>
 <li class="toctree-l2"><a class="reference internal" href="settings.html#git-repositories">Git Repositories</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="config_dir.html">Configuration Directory</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="config_dir.html#overview">Overview</a></li>
-<li class="toctree-l2"><a class="reference internal" href="config_dir.html#apache">Apache</a></li>
-<li class="toctree-l2"><a class="reference internal" href="config_dir.html#nginx">Nginx</a></li>
-<li class="toctree-l2"><a class="reference internal" href="config_dir.html#gitolite">Gitolite</a></li>
-<li class="toctree-l2"><a class="reference internal" href="config_dir.html#custom-prefab-users">Custom Prefab Users</a></li>
+<li class="toctree-l1"><a class="reference internal" href="configuration.html">Configuration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="configuration.html#basic-project-layout">Basic Project Layout</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration.html#apache">Apache</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration.html#nginx">Nginx</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration.html#gitolite">Gitolite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration.html#custom-prefab-users">Custom Prefab Users</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration.html#writing-documentation">Writing Documentation</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="tasks.html">Tasks</a><ul>
@@ -289,6 +446,22 @@ machine for development.</p>
 <li><a class="reference internal" href="#complete-install-instructions">Complete Install Instructions</a></li>
 <li><a class="reference internal" href="#what-it-does">What It Does</a></li>
 <li><a class="reference internal" href="#what-you-get">What You Get</a></li>
+<li><a class="reference internal" href="#where-s-my-stuff">Where&#8217;s My Stuff?</a><ul>
+<li><a class="reference internal" href="#your-web-site-files">Your Web Site Files</a><ul>
+<li><a class="reference internal" href="#the-canonical-layout">The Canonical Layout</a></li>
+<li><a class="reference internal" href="#php-projects">PHP Projects</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#ruby-versions">Ruby Versions</a><ul>
+<li><a class="reference internal" href="#rails-projects">Rails Projects</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#python-environments">Python Environments</a><ul>
+<li><a class="reference internal" href="#django-projects">Django Projects</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li><a class="reference internal" href="#specifically-what-you-get">Specifically What You Get</a></li>
 <li><a class="reference internal" href="#using-a-virtual-machine">Using a Virtual Machine</a></li>
 <li><a class="reference internal" href="#full-documentation">Full Documentation</a><ul>

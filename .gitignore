@@ -1,7 +1,6 @@
 maverick_cloud/settings.py
+maverick_cloud/.bak
+maverick_cloud/.tarballs
 maverick_cloud/conf/gitolite.conf
-maverick_cloud/conf/apache/localhost/public.tar.gz
-maverick_cloud/conf/apache/sites-available.tar.gz
-maverick_cloud/conf/nginx/sites-available.tar.gz
-maverick_cloud/conf/skel.tar.gz
-maverick_cloud/conf/keys/*
+maverick_cloud/conf/gitolite_repos.conf
+*.pyc

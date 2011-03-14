@@ -39,9 +39,9 @@ if [[ -n "$PS1" ]]; then
         . /etc/bash_aliases
     fi
 
-    if [ -f ~/.bash_aliases ]; then . ~/.bash_aliases fi
-    if [ -f ~/.colors_prompts ]; then . ~/.colors_prompts fi
-    if [ -f ~/.bash_prompt ]; then . ~/.bash_prompt fi
+    if [ -f ~/.bash_aliases ]; then . ~/.bash_aliases; fi
+    if [ -f ~/.colors_prompts ]; then . ~/.colors_prompts; fi
+    if [ -f ~/.bash_prompt ]; then . ~/.bash_prompt; fi
 fi
 
 export PATH=$PATH:~/bin

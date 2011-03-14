@@ -4,18 +4,20 @@
 
 # You should at least provide a hostname in FQDN format!
 #################################################################
+# Something like server_hostname  = 'rainmaker.wonderwidget.dyndns.org'
 server_hostname  = ''
+server_domain  = ''
 
 # You probably also want to change these settings
 #################################################################
 main_username    = 'masterchief' # this is the sudo user
 
-main_password    = 'admin1234'
-deploy_password  = 'webmaster1234'
-team_password    = 'dev1234'
+main_password    = 'mc2000'
+deploy_password  = 'rockin1999'
+team_password    = 'goteam900'
 
 team_users       = [ 'mary', 'john' ]
-git_repo_devteam = [ 'mary', 'john', 'bill', 'ted' ]
+git_repo_devteam = [ 'mary', 'john', 'jane', 'mike' ]
 git_hosted_repos = [ 'someproject', 'clientdemo', 'superblog' ]
 
 # You can probably leave the rest of these settings alone
@@ -31,36 +33,39 @@ single_user_mode = False
 
 # graceful mode
 from fabric.api import *
-if not (len(server_hostname) and len(server_domain)):
-    print """
-        It  looks like  this is  the first  time
-        you've run this  program. To get started
-        you'll  need root access and a  hostname
+if not len(server_domain):
 
-        Your hostname must be in FQDN format.
+    if not len(server_hostname):
+        print """
+            It  looks like  this is  the first  time
+            you've run this  program. To get started
+            you'll  need root access and a  hostname
 
-        To make this message go away:
-            * Put your hostname in settings.py
+            Your hostname must be in FQDN format.
 
-    """
+            TO MAKE THIS MESSAGE GO AWAY:
+                * Put your hostname in settings.py
 
-    server_hostname = prompt(
-        'What is your hostname?', 
-        default='thundercloud.mycorp.dyndns.org',
-        validate=r'^([-a-zA-Z_]+?\.)+([-a-zA-Z_]+)$')
-    server_domain = server_hostname.partition('.')[2]
-    server_fqdn   = server_hostname
-else:
-    if not len(server_domain):
+        """
+
+        server_hostname = prompt(
+            'What is your hostname?', 
+            default='rainmaker.wonderwidget.dyndns.org',
+            validate=r'^([-a-zA-Z_]+?\.)+([-a-zA-Z_]+)$')
         server_domain = server_hostname.partition('.')[2]
         server_fqdn   = server_hostname
     else:
-        server_fqdn = server_hostname+'.'+server_domain
+        server_domain = server_hostname.partition('.')[2]
+        
+    server_fqdn   = server_hostname
+
+else:
+    server_fqdn = server_hostname+'.'+server_domain
 
 # You can probably leave the rest of these settings alone
 #################################################################
-team_groupname   = 'developers'
-deploy_username  = 'webmaster'
+team_groupname   = 'webdevelopers'
+deploy_username  = 'deploy'
 
 git_repo_devteam.append(deploy_username)
 if not single_user_mode:
@@ -88,7 +93,11 @@ team_sudo_cmds = [
     "/usr/sbin/service apache2 stop"
 ]
 
-local_config_dir  = './conf'
+import os
+local_backup_dir  = os.path.abspath('./.bak')
+local_tar_dir     = os.path.abspath('./.tarballs')
+local_config_dir  = os.path.abspath('./conf')
+
 remote_backup_dir = '/var/dumps/maverick_cloud_fabfile'
 remote_config_dir = '/var/local/maverick_cloud_fabfile'
 
@@ -97,4 +106,30 @@ server_groupname       = 'www-data'
 webroot_dir            = '/var/www'
 python_environment_dir = '~/Envs'
 
-vim_config_tarball_url = 'http://rocksolidwebdesign.com/pub/vim/cloud_vim.tar.bz2'
+create_missing_shell_keys  = True
+create_missing_git_keys    = True
+
+vim_config_tarball_url = 'http://rocksolidwebdesign.com/pub/vim/cloud_vim.tar.gz'
+
+djangocms_deps = [
+    'south',
+    'pil',
+    'mysql-python',
+    'psycopg2',
+    'django',
+    'django-classy-tags',
+    'django-appmedia',
+    'django-cms',
+    'django-tinymce',
+]
+
+rails_gem_deps = [
+    'sqlite3-ruby',
+    'mysql',
+    'pg',
+    'rmagick',
+    'capistrano',
+    'capistrano-ext',
+    'libxml-ruby',
+    'libxslt-ruby',
+]

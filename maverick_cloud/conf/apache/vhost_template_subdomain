@@ -1,9 +1,10 @@
 <VirtualHost *>
-    ServerName generator.mycorp.dyndns.org
+    ServerName SERVERHOSTNAME.SERVERDOMAINNAME
     ServerAdmin webmaster@localhost
 
-    DocumentRoot /var/www/apache/generator.mycorp.dyndns.org/public
-    <Directory /var/www/apache/generator.mycorp.dyndns.org/public/>
+    DocumentRoot SERVERWEBROOT/apache/SERVERHOSTNAME.SERVERDOMAINNAME/public
+    <Directory SERVERWEBROOT/apache/SERVERHOSTNAME.SERVERDOMAINNAME/public/>
+        # Directory Settings
         Options FollowSymLinks
         AllowOverride All
     </Directory>
@@ -11,4 +12,6 @@
     LogLevel warn
     ErrorLog ${APACHE_LOG_DIR}/error.log
     CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+    # Custom Settings
 </VirtualHost>

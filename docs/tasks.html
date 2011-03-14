@@ -23,7 +23,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="Ubuntu Server In A Box v0.0.1 documentation" href="index.html" />
-    <link rel="prev" title="Configuration Directory" href="config_dir.html" /> 
+    <link rel="prev" title="Configuration" href="configuration.html" /> 
   </head>
   <body>
     <div class="related">
@@ -36,7 +36,7 @@
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="config_dir.html" title="Configuration Directory"
+          <a href="configuration.html" title="Configuration"
              accesskey="P">previous</a> |</li>
         <li><a href="index.html">Ubuntu Server In A Box v0.0.1 documentation</a> &raquo;</li> 
       </ul>
@@ -83,7 +83,7 @@ files will allow,  then you&#8217;ll want to modify  the fab tasks
 themselves.</p>
 <p>To  get an  idea  of  how to  modify  these  tasks, I  would
 recommend  reading the  Task API  and then  also looking  at
-<a class="reference internal" href="config_dir.html"><em>Configuration Directory</em></a></p>
+<a class="reference internal" href="configuration.html"><em>Configuration</em></a></p>
 <p>If  you want  to  for  example change  the  way gitolite  or
 Apache adds  users and  vhosts, you&#8217;ll want  to look  at the
 <tt class="docutils literal"><span class="pre">install_</span></tt> related tasks</p>
@@ -103,29 +103,35 @@ corresponding tasks for <tt class="docutils literal"><span class="pre">yum</span
 <span id="id2"></span><h2>Task API<a class="headerlink" href="#task-api" title="Permalink to this headline">¶</a></h2>
 <p>Here is the documentation for each fab task that is available</p>
 <p>You can of course, also see this list with <tt class="docutils literal"><span class="pre">fab</span> <span class="pre">--list</span></tt></p>
-<span class="target" id="module-quickfab.ubuntu.fabfile"></span><dl class="function">
-<dt id="quickfab.ubuntu.fabfile.a2enmod_proxy">
-<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">a2enmod_proxy</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.a2enmod_proxy" title="Permalink to this definition">¶</a></dt>
-<dd><p>Mod proxy is not enable by default, so enable it.</p>
+<span class="target" id="module-maverick_cloud.fabfile"></span><dl class="function">
+<dt id="maverick_cloud.fabfile.a2enmod_passenger">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">a2enmod_passenger</tt><big>(</big><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.a2enmod_passenger" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enable the Passenger module for serving Ruby apps</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="quickfab.ubuntu.fabfile.a2enmod_rewrite">
-<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">a2enmod_rewrite</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.a2enmod_rewrite" title="Permalink to this definition">¶</a></dt>
-<dd><p>Mod rewrite is not enabled by default, so enable it.</p>
+<dt id="maverick_cloud.fabfile.a2enmod_proxy">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">a2enmod_proxy</tt><big>(</big><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.a2enmod_proxy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enable the Proxy and Proxy HTTP modules</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="quickfab.ubuntu.fabfile.add_custom_user">
-<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">add_custom_user</tt><big>(</big><em>user</em>, <em>passw</em>, <em>fancy=True</em><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.add_custom_user" title="Permalink to this definition">¶</a></dt>
+<dt id="maverick_cloud.fabfile.a2enmod_rewrite">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">a2enmod_rewrite</tt><big>(</big><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.a2enmod_rewrite" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enable the Rewrite module</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="maverick_cloud.fabfile.add_custom_user">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">add_custom_user</tt><big>(</big><em>user</em>, <em>passw</em>, <em>fancy=True</em><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.add_custom_user" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a user with a preconfigured home directory</p>
 <p>Add a user account with a skeleton directory structure
 from the config in the local skel dir</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="quickfab.ubuntu.fabfile.add_prompt_to_user">
-<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">add_prompt_to_user</tt><big>(</big><em>home='~'</em>, <em>user=''</em><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.add_prompt_to_user" title="Permalink to this definition">¶</a></dt>
+<dt id="maverick_cloud.fabfile.add_prompt_to_user">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">add_prompt_to_user</tt><big>(</big><em>home='/root'</em>, <em>user='root'</em><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.add_prompt_to_user" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add an awesomely cool shell prompt for a user</p>
 <p>Our setup comes with a cool prompt but that comes from the
 skeleton directory for new users. If we are already a user, e.g.
@@ -140,45 +146,36 @@ the files to be uploaded to the proper home directory.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="quickfab.ubuntu.fabfile.aptget_common_headers">
-<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">aptget_common_headers</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.aptget_common_headers" title="Permalink to this definition">¶</a></dt>
+<dt id="maverick_cloud.fabfile.aptget_common_dev_headers">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">aptget_common_dev_headers</tt><big>(</big><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.aptget_common_dev_headers" title="Permalink to this definition">¶</a></dt>
 <dd><p>Install database, image and xml dev headers for compiling modules</p>
 <p>Common PHP, Ruby and python modules want some various dev
 headers around if we&#8217;re going to compile from scratch</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="quickfab.ubuntu.fabfile.aptget_compiler">
-<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">aptget_compiler</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.aptget_compiler" title="Permalink to this definition">¶</a></dt>
+<dt id="maverick_cloud.fabfile.aptget_compiler">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">aptget_compiler</tt><big>(</big><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.aptget_compiler" title="Permalink to this definition">¶</a></dt>
 <dd><p>We&#8217;ll need a compiler and basic build tools if we want
 to compile software.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="quickfab.ubuntu.fabfile.aptget_databases">
-<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">aptget_databases</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.aptget_databases" title="Permalink to this definition">¶</a></dt>
+<dt id="maverick_cloud.fabfile.aptget_databases">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">aptget_databases</tt><big>(</big><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.aptget_databases" title="Permalink to this definition">¶</a></dt>
 <dd><p>Install the common databases: MySQL, Postgres and SQLite</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="quickfab.ubuntu.fabfile.aptget_lamp">
-<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">aptget_lamp</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.aptget_lamp" title="Permalink to this definition">¶</a></dt>
-<dd><p>Install Apache along with CGI and PHP modules</p>
-<p>And a whole ton of common PHP extensions that should 
-be good enough for running common fairly advanced 
-software like Magento</p>
+<dt id="maverick_cloud.fabfile.aptget_git_server">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">aptget_git_server</tt><big>(</big><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.aptget_git_server" title="Permalink to this definition">¶</a></dt>
+<dd><p>Install git, the gitolite repo server and the gitweb frontend browser</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="quickfab.ubuntu.fabfile.aptget_mailserver">
-<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">aptget_mailserver</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.aptget_mailserver" title="Permalink to this definition">¶</a></dt>
-<dd><p>Install the commonly desired tools for setting up a mail server</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="quickfab.ubuntu.fabfile.aptget_misc_utilities">
-<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">aptget_misc_utilities</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.aptget_misc_utilities" title="Permalink to this definition">¶</a></dt>
-<dd><p>Installs <tt class="docutils literal"><span class="pre">locate</span></tt>, <tt class="docutils literal"><span class="pre">tmux</span></tt>, <tt class="docutils literal"><span class="pre">add-apt-repository</span></tt></p>
+<dt id="maverick_cloud.fabfile.aptget_init">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">aptget_init</tt><big>(</big><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.aptget_init" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates package list and installs: locate, tmux, add-apt-repository</p>
 <p>Some   various  handy   things   I   alwas  want,   plus
 <tt class="docutils literal"><span class="pre">add-apt-repository</span></tt> is currently  a dependency of the
 ubuntu packaging tasks, so do  not remove that or remove
@@ -186,38 +183,65 @@ calls to this function</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="quickfab.ubuntu.fabfile.aptget_mod_wsgi">
-<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">aptget_mod_wsgi</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.aptget_mod_wsgi" title="Permalink to this definition">¶</a></dt>
-<dd><p>Install and enable the WSGI module for running python apps</p>
+<dt id="maverick_cloud.fabfile.aptget_lamp">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">aptget_lamp</tt><big>(</big><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.aptget_lamp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Install Apache along with CGI and PHP modules</p>
+<p>And a whole ton of common PHP extensions that should 
+be good enough for running common fairly advanced 
+software like Magento</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="quickfab.ubuntu.fabfile.aptget_nginx">
-<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">aptget_nginx</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.aptget_nginx" title="Permalink to this definition">¶</a></dt>
+<dt id="maverick_cloud.fabfile.aptget_mail_server">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">aptget_mail_server</tt><big>(</big><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.aptget_mail_server" title="Permalink to this definition">¶</a></dt>
+<dd><p>Install the commonly desired tools for setting up a mail server</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="maverick_cloud.fabfile.aptget_mod_wsgi">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">aptget_mod_wsgi</tt><big>(</big><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.aptget_mod_wsgi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Install and enable the apache WSGI module for running python apps</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="maverick_cloud.fabfile.aptget_nginx">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">aptget_nginx</tt><big>(</big><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.aptget_nginx" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update to the lates nginx repo and install nginx</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="quickfab.ubuntu.fabfile.aptget_software_updates">
-<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">aptget_software_updates</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.aptget_software_updates" title="Permalink to this definition">¶</a></dt>
+<dt id="maverick_cloud.fabfile.aptget_passenger">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">aptget_passenger</tt><big>(</big><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.aptget_passenger" title="Permalink to this definition">¶</a></dt>
+<dd><p>Install and enable the apache Passenger module for running ruby apps</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="maverick_cloud.fabfile.aptget_ruby">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">aptget_ruby</tt><big>(</big><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.aptget_ruby" title="Permalink to this definition">¶</a></dt>
+<dd><p>Install the Ubuntu-packaged ruby from the main system including dev headers</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="maverick_cloud.fabfile.aptget_software_updates">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">aptget_software_updates</tt><big>(</big><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.aptget_software_updates" title="Permalink to this definition">¶</a></dt>
 <dd><p>Download and install the latest security patches for Ubuntu.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="quickfab.ubuntu.fabfile.aptget_uwsgi">
-<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">aptget_uwsgi</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.aptget_uwsgi" title="Permalink to this definition">¶</a></dt>
+<dt id="maverick_cloud.fabfile.aptget_svn_server">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">aptget_svn_server</tt><big>(</big><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.aptget_svn_server" title="Permalink to this definition">¶</a></dt>
+<dd><p>Install subversion and apache plugin</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="maverick_cloud.fabfile.aptget_uwsgi">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">aptget_uwsgi</tt><big>(</big><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.aptget_uwsgi" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update to the latest uwsgi repo and install uwsgi</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="quickfab.ubuntu.fabfile.aptget_version_control">
-<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">aptget_version_control</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.aptget_version_control" title="Permalink to this definition">¶</a></dt>
-<dd><p>Install git, subversion and servers for both of them</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="quickfab.ubuntu.fabfile.aptget_vim73">
-<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">aptget_vim73</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.aptget_vim73" title="Permalink to this definition">¶</a></dt>
+<dt id="maverick_cloud.fabfile.aptget_vim73">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">aptget_vim73</tt><big>(</big><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.aptget_vim73" title="Permalink to this definition">¶</a></dt>
 <dd><p>Install the latest vim which right now is 7.3</p>
 <p>Update to the latest vim repo and install the latest vim
 plus a couple common utilities that my vim config uses:</p>
@@ -228,43 +252,42 @@ plus a couple common utilities that my vim config uses:</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="quickfab.ubuntu.fabfile.backup_apache_config">
-<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">backup_apache_config</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.backup_apache_config" title="Permalink to this definition">¶</a></dt>
+<dt id="maverick_cloud.fabfile.backup_apache_config">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">backup_apache_config</tt><big>(</big><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.backup_apache_config" title="Permalink to this definition">¶</a></dt>
 <dd><p>Backs up the apache config to the backup directory</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="quickfab.ubuntu.fabfile.backup_nginx_config">
-<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">backup_nginx_config</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.backup_nginx_config" title="Permalink to this definition">¶</a></dt>
+<dt id="maverick_cloud.fabfile.backup_nginx_config">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">backup_nginx_config</tt><big>(</big><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.backup_nginx_config" title="Permalink to this definition">¶</a></dt>
 <dd><p>Backs up the nginx configuration dir into the backup directory</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="quickfab.ubuntu.fabfile.backup_user_home">
-<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">backup_user_home</tt><big>(</big><em>user</em><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.backup_user_home" title="Permalink to this definition">¶</a></dt>
+<dt id="maverick_cloud.fabfile.backup_user_home">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">backup_user_home</tt><big>(</big><em>user</em><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.backup_user_home" title="Permalink to this definition">¶</a></dt>
 <dd><p>Backup a users home dir to the backup dir</p>
 <p>If no backup yet exists for the given user&#8217;s home directory
 then create a backup for that user in remote_backup_dir/home_user.tar.gz</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="quickfab.ubuntu.fabfile.backup_webroot">
-<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">backup_webroot</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.backup_webroot" title="Permalink to this definition">¶</a></dt>
+<dt id="maverick_cloud.fabfile.backup_webroot">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">backup_webroot</tt><big>(</big><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.backup_webroot" title="Permalink to this definition">¶</a></dt>
 <dd><p>Backs up the webroot if it exists.</p>
 <p>Title should be self explanatory, this backs up the main server
 webroot directory if it exists.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="quickfab.ubuntu.fabfile.clean">
-<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">clean</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.clean" title="Permalink to this definition">¶</a></dt>
-<dd><p>This is more like make clean. This deletes all the custom config files
-generated by regen_configs()</p>
+<dt id="maverick_cloud.fabfile.clean">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">clean</tt><big>(</big><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.clean" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is more like make clean. This deletes all the custom config files generated by regen_configs()</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="quickfab.ubuntu.fabfile.clean_all">
-<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">clean_all</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.clean_all" title="Permalink to this definition">¶</a></dt>
+<dt id="maverick_cloud.fabfile.clean_all">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">clean_all</tt><big>(</big><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.clean_all" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sort of like make clean but more like uninstall.</p>
 <p>This tries to remove all custom configs, delete 
 all users, and restore original configs from the 
@@ -272,74 +295,74 @@ backups made by this script.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="quickfab.ubuntu.fabfile.clean_etc_skel">
-<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">clean_etc_skel</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.clean_etc_skel" title="Permalink to this definition">¶</a></dt>
+<dt id="maverick_cloud.fabfile.clean_etc_skel">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">clean_etc_skel</tt><big>(</big><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.clean_etc_skel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Removes the user configuration skeleton dir</p>
 <p>Removes the skeleton from the config directory. Maybe don&#8217;t need
 this since we&#8217;ve got a clean config task already?</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="quickfab.ubuntu.fabfile.clean_gitolite">
-<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">clean_gitolite</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.clean_gitolite" title="Permalink to this definition">¶</a></dt>
+<dt id="maverick_cloud.fabfile.clean_gitolite_config">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">clean_gitolite_config</tt><big>(</big><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.clean_gitolite_config" title="Permalink to this definition">¶</a></dt>
 <dd><p>Delete the gitolite specific files for repositories and config and such</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="quickfab.ubuntu.fabfile.clean_master_users">
-<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">clean_master_users</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.clean_master_users" title="Permalink to this definition">¶</a></dt>
+<dt id="maverick_cloud.fabfile.clean_master_users">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">clean_master_users</tt><big>(</big><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.clean_master_users" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove the deploy and main user accounts</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="quickfab.ubuntu.fabfile.clean_remote_backup_dir">
-<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">clean_remote_backup_dir</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.clean_remote_backup_dir" title="Permalink to this definition">¶</a></dt>
+<dt id="maverick_cloud.fabfile.clean_remote_backup_dir">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">clean_remote_backup_dir</tt><big>(</big><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.clean_remote_backup_dir" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove the main remote backup dir</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="quickfab.ubuntu.fabfile.clean_remote_config_dir">
-<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">clean_remote_config_dir</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.clean_remote_config_dir" title="Permalink to this definition">¶</a></dt>
+<dt id="maverick_cloud.fabfile.clean_remote_config_dir">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">clean_remote_config_dir</tt><big>(</big><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.clean_remote_config_dir" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove the main configuration uploads dir</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="quickfab.ubuntu.fabfile.clean_root_user">
-<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">clean_root_user</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.clean_root_user" title="Permalink to this definition">¶</a></dt>
+<dt id="maverick_cloud.fabfile.clean_root_user">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">clean_root_user</tt><big>(</big><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.clean_root_user" title="Permalink to this definition">¶</a></dt>
 <dd><p>Try to clean up any of the custom user configurations for root</p>
 <p>Remove the custom vim configuration if it exists. Remove sudoers file.
 Delete various other shell customization files.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="quickfab.ubuntu.fabfile.clean_team_sudoers">
-<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">clean_team_sudoers</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.clean_team_sudoers" title="Permalink to this definition">¶</a></dt>
+<dt id="maverick_cloud.fabfile.clean_team_sudoers">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">clean_team_sudoers</tt><big>(</big><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.clean_team_sudoers" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove the extra team privileges</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="quickfab.ubuntu.fabfile.clean_team_users">
-<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">clean_team_users</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.clean_team_users" title="Permalink to this definition">¶</a></dt>
+<dt id="maverick_cloud.fabfile.clean_team_users">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">clean_team_users</tt><big>(</big><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.clean_team_users" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove any team user accounts</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="quickfab.ubuntu.fabfile.clean_vim_config">
-<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">clean_vim_config</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.clean_vim_config" title="Permalink to this definition">¶</a></dt>
+<dt id="maverick_cloud.fabfile.clean_vim_config">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">clean_vim_config</tt><big>(</big><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.clean_vim_config" title="Permalink to this definition">¶</a></dt>
 <dd><p>Delete the custom system wide vim config files if they exist</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="quickfab.ubuntu.fabfile.clone_root_pubkey">
-<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">clone_root_pubkey</tt><big>(</big><em>user</em>, <em>home</em><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.clone_root_pubkey" title="Permalink to this definition">¶</a></dt>
+<dt id="maverick_cloud.fabfile.clone_root_pubkey">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">clone_root_pubkey</tt><big>(</big><em>user</em>, <em>home</em><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.clone_root_pubkey" title="Permalink to this definition">¶</a></dt>
 <dd><p>Copy pubkey from root to avoid password prompt</p>
 <p>Copy our current key from the root user to another user to
 avoid the need for a password when logging in.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="quickfab.ubuntu.fabfile.configure_open_share">
-<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">configure_open_share</tt><big>(</big><em>user</em>, <em>group</em>, <em>d</em><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.configure_open_share" title="Permalink to this definition">¶</a></dt>
+<dt id="maverick_cloud.fabfile.configure_open_share">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">configure_open_share</tt><big>(</big><em>user</em>, <em>group</em>, <em>d</em><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.configure_open_share" title="Permalink to this definition">¶</a></dt>
 <dd><p>Recursively set and enforce group ownership of a directory</p>
 <p>This is the case where we want all users of the group
 to always be able to have write permissions on all files
@@ -347,8 +370,8 @@ in this directory, even new files created by other people.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="quickfab.ubuntu.fabfile.configure_python_virtualenv">
-<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">configure_python_virtualenv</tt><big>(</big><em>target_host</em><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.configure_python_virtualenv" title="Permalink to this definition">¶</a></dt>
+<dt id="maverick_cloud.fabfile.configure_python_virtualenv">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">configure_python_virtualenv</tt><big>(</big><em>target_host</em><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.configure_python_virtualenv" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add virtualenv capabilites to this user.</p>
 <p>Mostly this just adds the config settings to the ~/.bashrc to
 provide access to <tt class="docutils literal"><span class="pre">workon</span></tt> and <tt class="docutils literal"><span class="pre">mkvirtualenv</span></tt>. This is
@@ -356,8 +379,8 @@ only applicable on a per user basis.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="quickfab.ubuntu.fabfile.configure_restricted_share">
-<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">configure_restricted_share</tt><big>(</big><em>user</em>, <em>group</em>, <em>d</em><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.configure_restricted_share" title="Permalink to this definition">¶</a></dt>
+<dt id="maverick_cloud.fabfile.configure_restricted_share">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">configure_restricted_share</tt><big>(</big><em>user</em>, <em>group</em>, <em>d</em><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.configure_restricted_share" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set group ownership of a directory</p>
 <p>This is the case in which we want users to be able to add
 files to a directory but not automatically be able to edit
@@ -365,14 +388,14 @@ or change the contents of that directory.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="quickfab.ubuntu.fabfile.docs">
-<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">docs</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.docs" title="Permalink to this definition">¶</a></dt>
+<dt id="maverick_cloud.fabfile.docs">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">docs</tt><big>(</big><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.docs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Regenerate the sphinx based documentation for this fabfile</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="quickfab.ubuntu.fabfile.init_root_user">
-<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">init_root_user</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.init_root_user" title="Permalink to this definition">¶</a></dt>
+<dt id="maverick_cloud.fabfile.init_root_user">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">init_root_user</tt><big>(</big><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.init_root_user" title="Permalink to this definition">¶</a></dt>
 <dd><p>Configure a root user account for convenient access, requires root password.</p>
 <p>Installs your SSH key for the root user. Uploads the custom
 home directory skeleton for new users. Creates backup
@@ -380,8 +403,8 @@ and config directories.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="quickfab.ubuntu.fabfile.init_system">
-<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">init_system</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.init_system" title="Permalink to this definition">¶</a></dt>
+<dt id="maverick_cloud.fabfile.init_system">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">init_system</tt><big>(</big><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.init_system" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialialize the bare necessities, i.e. root user etc</p>
 <p>Configures your admin user. Uploads the custom
 home directory skeleton for new users. Creates backup
@@ -389,8 +412,8 @@ and config directories.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="quickfab.ubuntu.fabfile.install_apache_config">
-<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">install_apache_config</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.install_apache_config" title="Permalink to this definition">¶</a></dt>
+<dt id="maverick_cloud.fabfile.install_apache_config">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">install_apache_config</tt><big>(</big><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.install_apache_config" title="Permalink to this definition">¶</a></dt>
 <dd><p>Install apache vhosts and custom &#8220;behind nginx&#8221; switch</p>
 <p>Copies the customized and templated vhosts from
 your local config dir to the actual web server and
@@ -402,14 +425,24 @@ team sharing of the vhost configs.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="quickfab.ubuntu.fabfile.install_etc_skel">
-<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">install_etc_skel</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.install_etc_skel" title="Permalink to this definition">¶</a></dt>
+<dt id="maverick_cloud.fabfile.install_env_djangocms">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">install_env_djangocms</tt><big>(</big><em>target_host='deploy&#64;rainmaker.wonderwidget.dyndns.org'</em>, <em>virtualenv='djangocms_test'</em><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.install_env_djangocms" title="Permalink to this definition">¶</a></dt>
+<dd><p>Download and install RVM (the Ruby Version Manager)</p>
+<p>Add rvm capabilites to this user. Mostly this
+just adds the config settings to the ~/.bashrc to
+provide access to <tt class="docutils literal"><span class="pre">rvm</span></tt>. This is only applicable
+on a per user basis.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="maverick_cloud.fabfile.install_etc_skel">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">install_etc_skel</tt><big>(</big><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.install_etc_skel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Uploads the new user skeleton directory to the remote_config_dir</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="quickfab.ubuntu.fabfile.install_gitolite_config">
-<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">install_gitolite_config</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.install_gitolite_config" title="Permalink to this definition">¶</a></dt>
+<dt id="maverick_cloud.fabfile.install_gitolite_config">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">install_gitolite_config</tt><big>(</big><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.install_gitolite_config" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initializes and sets up the gitolite server</p>
 <p>Installs and a basic git server adds your repos and gives
 your developers access to those repos. There&#8217;s no backup
@@ -420,14 +453,20 @@ adds to its home directory.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="quickfab.ubuntu.fabfile.install_master_users">
-<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">install_master_users</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.install_master_users" title="Permalink to this definition">¶</a></dt>
+<dt id="maverick_cloud.fabfile.install_master_users">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">install_master_users</tt><big>(</big><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.install_master_users" title="Permalink to this definition">¶</a></dt>
 <dd><p>Install deploy and main users depending on <tt class="docutils literal"><span class="pre">single_user_mode</span></tt></p>
 </dd></dl>
 
 <dl class="function">
-<dt id="quickfab.ubuntu.fabfile.install_nginx_config">
-<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">install_nginx_config</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.install_nginx_config" title="Permalink to this definition">¶</a></dt>
+<dt id="maverick_cloud.fabfile.install_mod_passenger_gem">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">install_mod_passenger_gem</tt><big>(</big><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.install_mod_passenger_gem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Download and install the latest passenger gem into the system apache</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="maverick_cloud.fabfile.install_nginx_config">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">install_nginx_config</tt><big>(</big><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.install_nginx_config" title="Permalink to this definition">¶</a></dt>
 <dd><p>Install nginx vhosts suitable for reverse proxying Apache</p>
 <p>Copies the customized and templated vhosts from
 your local config dir to the actual web server and
@@ -437,29 +476,61 @@ by default.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="quickfab.ubuntu.fabfile.install_python_distribute">
-<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">install_python_distribute</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.install_python_distribute" title="Permalink to this definition">¶</a></dt>
+<dt id="maverick_cloud.fabfile.install_python_distribute">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">install_python_distribute</tt><big>(</big><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.install_python_distribute" title="Permalink to this definition">¶</a></dt>
 <dd><p>Installs the &#8220;distribute&#8221; python package, a setuptools clone</p>
 <p>Install setuptools so we can build pip and other packages.
 I prefer using distribute.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="quickfab.ubuntu.fabfile.install_python_pip">
-<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">install_python_pip</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.install_python_pip" title="Permalink to this definition">¶</a></dt>
+<dt id="maverick_cloud.fabfile.install_python_pip">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">install_python_pip</tt><big>(</big><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.install_python_pip" title="Permalink to this definition">¶</a></dt>
 <dd><p>Download and install a recent version of the pip utility</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="quickfab.ubuntu.fabfile.install_python_virtualenv">
-<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">install_python_virtualenv</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.install_python_virtualenv" title="Permalink to this definition">¶</a></dt>
+<dt id="maverick_cloud.fabfile.install_python_virtualenv">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">install_python_virtualenv</tt><big>(</big><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.install_python_virtualenv" title="Permalink to this definition">¶</a></dt>
 <dd><p>Install virtualenv and virtual env wrapper from pip</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="quickfab.ubuntu.fabfile.install_ruby_rvm">
-<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">install_ruby_rvm</tt><big>(</big><em>target_host</em><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.install_ruby_rvm" title="Permalink to this definition">¶</a></dt>
-<dd><p>Download and install RVM (the Ruby Version Manager)</p>
+<dt id="maverick_cloud.fabfile.install_rails_server">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">install_rails_server</tt><big>(</big><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.install_rails_server" title="Permalink to this definition">¶</a></dt>
+<dd><p>Download and install rails 2.3.8 system wide</p>
+<p>Ruby  1.8  with  rails   2.3.8  keeps  the  main  server
+compatible with radiantcms. Latest ruby and rails can be
+found in rvm for the deploy user.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="maverick_cloud.fabfile.install_rubygems">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">install_rubygems</tt><big>(</big><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.install_rubygems" title="Permalink to this definition">¶</a></dt>
+<dd><p>Download and install the latest rubygems system wide</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="maverick_cloud.fabfile.install_rvm">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">install_rvm</tt><big>(</big><em>target_host='deploy&#64;rainmaker.wonderwidget.dyndns.org'</em><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.install_rvm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Download and install RVM (the Ruby Version Manager) for a given user</p>
+<p>Add rvm capabilites to this  user. Mostly this just adds
+the config  settings to the ~/.bashrc  to provide access
+to <tt class="docutils literal"><span class="pre">rvm</span></tt>. This is only applicable on a per user basis.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="maverick_cloud.fabfile.install_rvm_rails_server">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">install_rvm_rails_server</tt><big>(</big><em>target_host='deploy&#64;rainmaker.wonderwidget.dyndns.org'</em><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.install_rvm_rails_server" title="Permalink to this definition">¶</a></dt>
+<dd><p>Install Ruby 1.9.2 and Rails 3.x from rvm for the given user</p>
+<p>Also installs a number of pretty standard desirably gems. Don&#8217;t bother
+with the XSLT lib because it&#8217;s broken in 1.9.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="maverick_cloud.fabfile.install_sys_djangocms">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">install_sys_djangocms</tt><big>(</big><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.install_sys_djangocms" title="Permalink to this definition">¶</a></dt>
+<dd><p>Download and install Django CMS with pip</p>
 <p>Add rvm capabilites to this user. Mostly this
 just adds the config settings to the ~/.bashrc to
 provide access to <tt class="docutils literal"><span class="pre">rvm</span></tt>. This is only applicable
@@ -467,16 +538,16 @@ on a per user basis.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="quickfab.ubuntu.fabfile.install_team_sudoers">
-<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">install_team_sudoers</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.install_team_sudoers" title="Permalink to this definition">¶</a></dt>
+<dt id="maverick_cloud.fabfile.install_team_sudoers">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">install_team_sudoers</tt><big>(</big><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.install_team_sudoers" title="Permalink to this definition">¶</a></dt>
 <dd><p>Give team members some limited webserver related priviliges</p>
 <p>Install our own custom sudoers config for the team to
 allow team members to stop and start the web server.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="quickfab.ubuntu.fabfile.install_team_users">
-<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">install_team_users</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.install_team_users" title="Permalink to this definition">¶</a></dt>
+<dt id="maverick_cloud.fabfile.install_team_users">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">install_team_users</tt><big>(</big><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.install_team_users" title="Permalink to this definition">¶</a></dt>
 <dd><p>Setup team user accounts for each member</p>
 <p>If this is a shared workgroup server with multiple user
 accounts, then set up each initial user account with
@@ -484,16 +555,16 @@ proper group and permissions to work on the same files</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="quickfab.ubuntu.fabfile.install_vim_config">
-<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">install_vim_config</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.install_vim_config" title="Permalink to this definition">¶</a></dt>
+<dt id="maverick_cloud.fabfile.install_vim_config">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">install_vim_config</tt><big>(</big><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.install_vim_config" title="Permalink to this definition">¶</a></dt>
 <dd><p>Install custom vim configuration</p>
 <p>Try to install our custom vim configuration in the main system 
 for all users.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="quickfab.ubuntu.fabfile.install_webroot">
-<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">install_webroot</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.install_webroot" title="Permalink to this definition">¶</a></dt>
+<dt id="maverick_cloud.fabfile.install_webroot">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">install_webroot</tt><big>(</big><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.install_webroot" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create initial webroot directory layout for Apache, Django and Rails</p>
 <p>Sets up the initial outline for the main web server root directory.
 The way I like it is split in to three sections one for apache/php
@@ -507,8 +578,8 @@ and two others for python and ruby (rails and django) projects.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="quickfab.ubuntu.fabfile.regen_configs">
-<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">regen_configs</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.regen_configs" title="Permalink to this definition">¶</a></dt>
+<dt id="maverick_cloud.fabfile.regen_configs">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">regen_configs</tt><big>(</big><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.regen_configs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate server config files, like vhosts, based on templates.</p>
 <p>Generate the config files from their respective templates. Also
 the list of gitolite repos is built from the settings array <tt class="docutils literal"><span class="pre">git_hosted_repos</span></tt></p>
@@ -521,8 +592,19 @@ the list of gitolite repos is built from the settings array <tt class="docutils 
 </dd></dl>
 
 <dl class="function">
-<dt id="quickfab.ubuntu.fabfile.regen_tarballs">
-<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">regen_tarballs</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.regen_tarballs" title="Permalink to this definition">¶</a></dt>
+<dt id="maverick_cloud.fabfile.regen_tarball">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">regen_tarball</tt><big>(</big><em>srcdir</em>, <em>source</em><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.regen_tarball" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate a tarball of a config dir</p>
+<p>This is a helper function for regenerating all the config tarballs for upload</p>
+<p>Files end up in</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">conf/tarballs</span></tt></li>
+</ul>
+</dd></dl>
+
+<dl class="function">
+<dt id="maverick_cloud.fabfile.regen_tarballs">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">regen_tarballs</tt><big>(</big><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.regen_tarballs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tarball the config tarballs for ease of upload</p>
 <p>This script uploads a number of tarballs that are used to configure
 the server with the settings you want. This Method freshly regenerates
@@ -537,91 +619,122 @@ tarballs that might already exist. The current tarballs are</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="quickfab.ubuntu.fabfile.reskel_existing_user">
-<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">reskel_existing_user</tt><big>(</big><em>user</em>, <em>home=''</em><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.reskel_existing_user" title="Permalink to this definition">¶</a></dt>
+<dt id="maverick_cloud.fabfile.reskel_existing_user">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">reskel_existing_user</tt><big>(</big><em>user</em>, <em>home=''</em><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.reskel_existing_user" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add custom user configuration to an existing user</p>
 <p>Backup the user&#8217;s home directory and install
 fresh files from the custom skeleton instead</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="quickfab.ubuntu.fabfile.restore_apache_config">
-<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">restore_apache_config</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.restore_apache_config" title="Permalink to this definition">¶</a></dt>
+<dt id="maverick_cloud.fabfile.restore_apache_config">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">restore_apache_config</tt><big>(</big><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.restore_apache_config" title="Permalink to this definition">¶</a></dt>
 <dd><p>Restore original apache config from backup if the backup exists</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="quickfab.ubuntu.fabfile.restore_nginx_config">
-<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">restore_nginx_config</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.restore_nginx_config" title="Permalink to this definition">¶</a></dt>
+<dt id="maverick_cloud.fabfile.restore_nginx_config">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">restore_nginx_config</tt><big>(</big><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.restore_nginx_config" title="Permalink to this definition">¶</a></dt>
 <dd><p>Restore original nginx config from backup if the backup exists</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="quickfab.ubuntu.fabfile.restore_user_home">
-<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">restore_user_home</tt><big>(</big><em>user</em><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.restore_user_home" title="Permalink to this definition">¶</a></dt>
+<dt id="maverick_cloud.fabfile.restore_user_home">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">restore_user_home</tt><big>(</big><em>user</em><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.restore_user_home" title="Permalink to this definition">¶</a></dt>
 <dd><p>Restore a user&#8217;s original home directory from the backup dir</p>
 <p>If a backup exists for the user&#8217;s home directory, delete the
 current home directory and restore from the backup.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="quickfab.ubuntu.fabfile.restore_webroot">
-<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">restore_webroot</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.restore_webroot" title="Permalink to this definition">¶</a></dt>
+<dt id="maverick_cloud.fabfile.restore_webroot">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">restore_webroot</tt><big>(</big><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.restore_webroot" title="Permalink to this definition">¶</a></dt>
 <dd><p>Restore original webroot from backup if the backup exists</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="quickfab.ubuntu.fabfile.setup_all">
-<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">setup_all</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.setup_all" title="Permalink to this definition">¶</a></dt>
+<dt id="maverick_cloud.fabfile.select_prompt">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">select_prompt</tt><big>(</big><em>name='remote_root'</em>, <em>host='root&#64;rainmaker.wonderwidget.dyndns.org'</em><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.select_prompt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Change the ~/.bash_prompt var to use the special red root prompt</p>
+<p>There are currently two prompts to select from, one is a regular
+user prompt that is green and red, and the other is the same
+but the all red to alter you that you are running commands as
+actual root and as so, to be careful.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="maverick_cloud.fabfile.setup">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">setup</tt><big>(</big><em>update=True</em><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.setup" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bootstrap an entire server from a blank rackspace Ubuntu 10.10 VPS</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="quickfab.ubuntu.fabfile.setup_packages">
-<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">setup_packages</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.setup_packages" title="Permalink to this definition">¶</a></dt>
-<dd><p>Installs all software that comes from the package manager</p>
+<dt id="maverick_cloud.fabfile.setup_apache">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">setup_apache</tt><big>(</big><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.setup_apache" title="Permalink to this definition">¶</a></dt>
+<dd><p>Installs and configures Apache HTTPD</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="quickfab.ubuntu.fabfile.setup_ruby_python">
-<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">setup_ruby_python</tt><big>(</big><em>target_host='webmaster&#64;thundercloud.mycorp.dyndns.org'</em><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.setup_ruby_python" title="Permalink to this definition">¶</a></dt>
-<dd><p>Configures virtualenv and rvm for a particular user</p>
-<p>By default this is the deploy user.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="quickfab.ubuntu.fabfile.setup_server">
-<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">setup_server</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.setup_server" title="Permalink to this definition">¶</a></dt>
+<dt id="maverick_cloud.fabfile.setup_git_server">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">setup_git_server</tt><big>(</big><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.setup_git_server" title="Permalink to this definition">¶</a></dt>
 <dd><p>Installs and configures web, mail and git servers</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="quickfab.ubuntu.fabfile.setup_users">
-<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">setup_users</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.setup_users" title="Permalink to this definition">¶</a></dt>
+<dt id="maverick_cloud.fabfile.setup_nginx">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">setup_nginx</tt><big>(</big><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.setup_nginx" title="Permalink to this definition">¶</a></dt>
+<dd><p>Installs and configures nginx</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="maverick_cloud.fabfile.setup_python">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">setup_python</tt><big>(</big><em>target_host='deploy&#64;rainmaker.wonderwidget.dyndns.org'</em><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.setup_python" title="Permalink to this definition">¶</a></dt>
+<dd><p>Installs python, virtualenv and WSGI.</p>
+<p>Also installs the basic django modules system wide using pip. Installs
+virtualenv for the deploy user.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="maverick_cloud.fabfile.setup_ruby">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">setup_ruby</tt><big>(</big><em>target_host='deploy&#64;rainmaker.wonderwidget.dyndns.org'</em><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.setup_ruby" title="Permalink to this definition">¶</a></dt>
+<dd><p>Installs rails and passenger.</p>
+<p>Installs  system  ruby   with  compatibility  rails,  recent
+rubygems and rvm for deploy user with latest rails.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="maverick_cloud.fabfile.setup_server">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">setup_server</tt><big>(</big><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.setup_server" title="Permalink to this definition">¶</a></dt>
+<dd><p>Installs and configures web, mail and git servers</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="maverick_cloud.fabfile.setup_svn_server">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">setup_svn_server</tt><big>(</big><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.setup_svn_server" title="Permalink to this definition">¶</a></dt>
+<dd><p>Installs and configures subversion and apache svn server</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="maverick_cloud.fabfile.setup_users">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">setup_users</tt><big>(</big><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.setup_users" title="Permalink to this definition">¶</a></dt>
 <dd><p>Install basic user accounts</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="quickfab.ubuntu.fabfile.setup_virtualenv">
-<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">setup_virtualenv</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.setup_virtualenv" title="Permalink to this definition">¶</a></dt>
-<dd><p>Installs virtualenv system wide</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="quickfab.ubuntu.fabfile.test_local">
-<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">test_local</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.test_local" title="Permalink to this definition">¶</a></dt>
+<dt id="maverick_cloud.fabfile.test_local">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">test_local</tt><big>(</big><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.test_local" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test echo on localhost. Reports the git user settings and the environment $SHELL variable.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="quickfab.ubuntu.fabfile.test_remote">
-<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">test_remote</tt><big>(</big><em>user='root'</em><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.test_remote" title="Permalink to this definition">¶</a></dt>
+<dt id="maverick_cloud.fabfile.test_remote">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">test_remote</tt><big>(</big><em>user='root'</em><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.test_remote" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test a remote host, takes user account login name as a single argument</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="quickfab.ubuntu.fabfile.upload_website_apache_localhost">
-<tt class="descclassname">quickfab.ubuntu.fabfile.</tt><tt class="descname">upload_website_apache_localhost</tt><big>(</big><big>)</big><a class="headerlink" href="#quickfab.ubuntu.fabfile.upload_website_apache_localhost" title="Permalink to this definition">¶</a></dt>
+<dt id="maverick_cloud.fabfile.upload_website_apache_localhost">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">upload_website_apache_localhost</tt><big>(</big><em>host='root&#64;rainmaker.wonderwidget.dyndns.org'</em><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.upload_website_apache_localhost" title="Permalink to this definition">¶</a></dt>
 <dd><p>Uploads the actual publicly accessible files for the default localhost</p>
 <p>Installs a set of skeleton files for the default vhost, aka
 localhost, for apache. Right now this is basically just <tt class="docutils literal"><span class="pre">info.php</span></tt>
@@ -649,8 +762,8 @@ so you can see that the server is working.</p>
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="config_dir.html"
-                        title="previous chapter">Configuration Directory</a></p>
+  <p class="topless"><a href="configuration.html"
+                        title="previous chapter">Configuration</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/tasks.txt"
@@ -683,7 +796,7 @@ so you can see that the server is working.</p>
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="config_dir.html" title="Configuration Directory"
+          <a href="configuration.html" title="Configuration"
              >previous</a> |</li>
         <li><a href="index.html">Ubuntu Server In A Box v0.0.1 documentation</a> &raquo;</li> 
       </ul>

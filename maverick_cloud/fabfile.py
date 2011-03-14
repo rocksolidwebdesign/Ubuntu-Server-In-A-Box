@@ -8,6 +8,10 @@ print "========================================="
 from settings import *
 
 # Download URLs and other settings {{{
+rubygems_url = 'http://production.cf.rubygems.org/rubygems'
+rubygems_vers = 'rubygems-1.6.2'
+rubygems_tarball = 'rubygems-1.6.2.tgz'
+
 pypi_url = 'http://pypi.python.org/packages/source'
 pip_vers = 'pip-0.8.2'
 pip_url  = pypi_url+'/p/pip/'+pip_vers+'.tar.gz'
@@ -23,105 +27,57 @@ get_cur_timestamp = '$(date +%Y-%m-%d_%H%M%S)'
 
 # }}}
 
-# Main Install
-def setup_all(): # {{{
+# MAIN TASKS
+################################################################
+# Shortcuts - tasks that call the high level generic tasks below
+
+def setup(update=True): # {{{
     """
     Bootstrap an entire server from a blank rackspace Ubuntu 10.10 VPS
     """
 
+    # Preparation
+    # ---------------------------------------------------
+    # install the root user, config and working dirs
     init_system()
 
     # this is basically a dependency actually
     # because it has add-apt-repository
-    aptget_misc_utilities()
+    aptget_init()
+
+    # Install security updates
+    if update:
+        aptget_software_updates()
+
+    aptget_compiler()
+    aptget_common_dev_headers()
 
     # I like to have the latest vim and
     # I like to have a nice vim config
     aptget_vim73()
     install_vim_config()
 
-    # Generate the configuration files
-    # from their templates and package
-    # them as tarballs for uploading
-    regen_configs()
-    regen_tarballs()
+    # Main Server Setup
+    # ---------------------------------------------------
+    setup_users()  # setup users in a common group
 
-    # The main bulk of the setup
-    setup_users()
-    setup_packages()
-    setup_server()
-    setup_virtualenv()
-    setup_ruby_python()
-
-    # the previous call by default only
-    # sets up rvm and virtualenv for the
-    # deploy user
-    if not single_user_mode:
-        setup_ruby_python(main_host)
-
-    # don't go gettin all crazy just yet
-    #if not single_user_mode:
-    #    for name in team:
-    #        setup_ruby_python(team+'@'server_hostname)
-
-# }}}
-
-# Other Primary Tasks
-def setup_users(): # {{{
-    """
-    Install basic user accounts
-    """
-    install_master_users()
-    install_team_users()
-    install_team_sudoers()
-
-# }}}
-def setup_packages(): # {{{
-    """
-    Installs all software that comes from the package manager
-    """
-    #aptget_software_updates()
-    aptget_compiler()
-    aptget_common_headers()
-    aptget_version_control()
-    aptget_lamp()
-    a2enmod_rewrite()
-    a2enmod_proxy()
-    aptget_mod_wsgi()
-    aptget_nginx()
-    aptget_uwsgi()
-    #aptget_mailserver()
+    setup_server() # includes PHP and MySQL
+    setup_python() # includes virtualenv, django and wsgi
+    setup_ruby()   # includes rvm, rails and passenger
 
 # }}}
 def setup_server(): # {{{
     """
     Installs and configures web, mail and git servers
     """
-    configure_webroot()
-    configure_apache()
-    configure_nginx()
-    configure_gitolite()
-    #configure_mailserver()
+    install_webroot()
+    setup_apache()
+    setup_nginx()
 
-# }}}
-def setup_virtualenv(): # {{{
-    """
-    Installs virtualenv system wide
-    """
-    install_python_distribute()
-    install_python_pip()
-    install_python_virtualenv()
+    #setup_mail_server()
 
-# }}}
-def setup_ruby_python(target_host=deploy_host): # {{{
-    """
-    Configures virtualenv and rvm for a particular user
-    
-    By default this is the deploy user.
-    """
-    configure_python_virtualenv(target_host)
-    install_ruby_rvm(target_host)
-    configure_ruby_rvm(target_host)
+    setup_git_server()
+    #setup_svn_server()
 
 # }}}
 def clean_all(): # {{{
@@ -141,8 +97,12 @@ def clean_all(): # {{{
 
 # }}}
 
-# Doing the Actual Work
-# System Setup {{{
+
+# GENERIC TASKS
+################################################################
+# Tasks that call other tasks that actually get work done
+
+# System Init
 def init_system(): # {{{
     """
     Initialialize the bare necessities, i.e. root user etc
@@ -151,12 +111,130 @@ def init_system(): # {{{
     home directory skeleton for new users. Creates backup
     and config directories.
     """
+    env.host_string = root_host
+
+    regen_configs()
+    regen_tarballs()
+
     init_root_user();
-    install_etc_skel()
-    run('mkdir -p '+remote_backup_dir)
-    run('mkdir -p '+remote_config_dir)
+
+    with settings(hide('warnings'), warn_only=True):
+        local('mkdir -p '+local_backup_dir)
+        local('mkdir -p '+local_tar_dir)
+        run('mkdir -p '+remote_backup_dir)
+        run('mkdir -p '+remote_config_dir)
 
 # }}}
+def setup_users(): # {{{
+    """
+    Install basic user accounts
+    """
+    install_etc_skel()
+    install_master_users()
+    install_team_users()
+    install_team_sudoers()
+
+# }}}
+
+# Web and Mail Servers
+def setup_apache(): # {{{
+    """
+    Installs and configures Apache HTTPD
+    """
+    aptget_lamp()
+    a2enmod_rewrite()
+    a2enmod_proxy()
+
+# }}}
+def setup_nginx(): # {{{
+    """
+    Installs and configures nginx
+    """
+    aptget_nginx()
+    install_nginx_config()
+
+# }}}
+def setup_mail_server(): # {{{
+    aptget_mail_server()
+    install_postfix_dovecot_config()
+
+# }}}
+
+# Version Control
+def setup_git_server(): # {{{
+    """
+    Installs and configures web, mail and git servers
+    """
+    aptget_git_server()
+    install_gitolite_config()
+
+# }}}
+def setup_svn_server(): # {{{
+    """
+    Installs and configures subversion and apache svn server
+    """
+    aptget_svn_server()
+    #install_webdav_config()
+
+# }}}
+
+# Python and Ruby
+def setup_python(target_host=deploy_host): # {{{
+    """
+    Installs python, virtualenv and WSGI.
+
+    Also installs the basic django modules system wide using pip. Installs
+    virtualenv for the deploy user.
+    """
+
+    # install the deps for basic sanity
+    install_python_distribute()
+    install_python_pip()
+    install_python_virtualenv()
+
+    # setup the deploy user with virtualenv
+    configure_python_virtualenv(target_host)
+
+    # install the wsgi apache module and the standalone uwsgi
+    aptget_mod_wsgi()
+    aptget_uwsgi()
+
+    # install the common pip modules for django apps like django-cms
+    install_sys_djangocms()
+
+# }}}
+def setup_ruby(target_host=deploy_host): # {{{
+    """
+    Installs rails and passenger.
+    
+    Installs  system  ruby   with  compatibility  rails,  recent
+    rubygems and rvm for deploy user with latest rails.
+    """
+    aptget_ruby()
+
+    # latest gems, but system wide
+    install_rubygems()
+
+    # install rails server for apache
+    install_rails_server()
+    install_mod_passenger_gem()
+
+    # rvm installs
+    install_rvm(target_host)
+    install_rvm_rails_server(target_host)
+
+# }}}
+
+# }}}
+
+
+# REAL TASKS
+################################################################
+# Stuff that actually does the work
+
+# Core Configuration
+# Users {{{
+# root
 def init_root_user(): # {{{
     """
     Configure a root user account for convenient access, requires root password.
@@ -166,12 +244,12 @@ def init_root_user(): # {{{
     and config directories.
     """
     env.host_string = root_host
-    local('yes "yes" | ssh-copy-id ' + root_host)
 
+    local('ssh-copy-id ' + root_host)
+
+    # these both use root by default
     add_prompt_to_user()
-
-    # choose the root prompt instead of the user prompt
-    run("echo 'export PS1=$remote_root' > ~/.bash_prompt")
+    select_prompt()
 
 # }}}
 def clean_root_user(): # {{{
@@ -182,19 +260,21 @@ def clean_root_user(): # {{{
     Delete various other shell customization files.
     """
     env.host_string = root_host
+
     run('rm -rf .vim .vimrc .viminfo .ssh .colors_prompts .bash_prompt')
     run('if [ -e ~/.bashrc.bak ]; then rm -rf ~/.bashrc; mv ~/.bashrc.bak ~/.bashrc; fi')
 
 # }}}
-# }}}
-# Users {{{
+
 # users
 def install_master_users(): # {{{
     """
     Install deploy and main users depending on ``single_user_mode``
     """
+    env.host_string = root_host
+
     if single_user_mode:
-        add_user(deploy_username, deploy_password)
+        add_custom_user(deploy_username, deploy_password)
 
         # same login as root
         clone_root_pubkey(deploy_username, '/home/'+deploy_username)
@@ -203,8 +283,8 @@ def install_master_users(): # {{{
         run('adduser '+deploy_username+' sudo')
 
     else:
-        add_user(deploy_username, deploy_password)
-        add_user(main_username, main_password)
+        add_custom_user(deploy_username, deploy_password)
+        add_custom_user(main_username, main_password)
 
         # same login as root
         clone_root_pubkey(deploy_username, '/home/'+deploy_username)
@@ -218,6 +298,8 @@ def clean_master_users(): # {{{
     """
     Remove the deploy and main user accounts
     """
+    env.host_string = root_host
+
     with settings(hide('warnings'), warn_only=True):
         run('deluser '+deploy_username)
         run('rm -rf /home/'+deploy_username)
@@ -227,6 +309,7 @@ def clean_master_users(): # {{{
             run('rm -rf /home/'+main_username)
 
 # }}}
+
 # team
 def install_team_users(): # {{{
     """
@@ -237,6 +320,7 @@ def install_team_users(): # {{{
     proper group and permissions to work on the same files
     """
     env.host_string = root_host
+
     run('addgroup '+team_groupname)
 
     run('adduser '+deploy_username+' '+team_groupname)
@@ -248,7 +332,7 @@ def install_team_users(): # {{{
         run('adduser '+main_username+' '+server_groupname)
 
     for name in team_users:
-        add_user(name, team_password)
+        add_custom_user(name, team_password)
         run('adduser '+name+' '+server_groupname)
         run('adduser '+name+' '+team_groupname)
 
@@ -257,6 +341,8 @@ def clean_team_users(): # {{{
     """
     Remove any team user accounts
     """
+    env.host_string = root_host
+
     with settings(hide('warnings'), warn_only=True):
         run('deluser '+deploy_username)
         run('deluser '+main_username)
@@ -268,6 +354,7 @@ def clean_team_users(): # {{{
             run('rm -rf /home/'+name)
 
 # }}}
+
 # sudoers
 def install_team_sudoers(): # {{{
     """
@@ -291,16 +378,19 @@ def clean_team_sudoers(): # {{{
     """
     Remove the extra team privileges
     """
+    env.host_string = root_host
+
     run('if [ -e /etc/sudoers.d/'+team_groupname+' ]; then rm -rf /etc/sudoers.d/'+team_groupname+'; fi')
 # }}}
 
-# }}}
-# User Customizations {{{
+# home skeleton
 def install_etc_skel(): # {{{
     """
     Uploads the new user skeleton directory to the remote_config_dir
     """
-    put(local_config_dir+'/skel.tar.gz', remote_config_dir)
+    env.host_string = root_host
+
+    put(local_tar_dir+'/skel.tar.gz', remote_config_dir)
     with cd(remote_config_dir):
         run('tar -zxf skel.tar.gz')
         run('rm -rf skel.tar.gz')
@@ -313,10 +403,13 @@ def clean_etc_skel(): # {{{
     Removes the skeleton from the config directory. Maybe don't need
     this since we've got a clean config task already?
     """
+    env.host_string = root_host
+
     run('rm -rf '+remote_config_dir+'/skel')
 
 # }}}
 
+# vim config
 def install_vim_config(): # {{{
     """
     Install custom vim configuration
@@ -327,33 +420,39 @@ def install_vim_config(): # {{{
     env.host_string = root_host
 
     if len(vim_config_tarball_url):
-        run('rm -rf /usr/share/vim/vimfiles')
-
         # get nice vim configuration
-        run('wget '+vim_config_tarball_url)
-        run('tar -jxf vim.tar.bz2')
+        with settings(hide('warnings'), warn_only=True):
+            if run('wget '+vim_config_tarball_url).succeeded:
+                filename = os.path.basename(vim_config_tarball_url)
+                run('tar -zxf '+filename)
 
-        # install the vim configuration system wide
-        run('mv .vimrc /etc/vim/vimrc.local')
-        run('mv .vim /usr/share/vim/vimfiles')
+                run('rm -rf /usr/share/vim/vimfiles')
 
-        # cleanup
-        run('rm -rf vim.tar.bz2')
+                # install the vim configuration system wide
+                run('mv .vimrc /etc/vim/vimrc.local')
+                run('mv .vim /usr/share/vim/vimfiles')
+
+                # cleanup
+                run('rm -rf '+filename)
 
 # }}}
 def clean_vim_config(): # {{{
     """
     Delete the custom system wide vim config files if they exist
     """
+    env.host_string = root_host
+
     vimfiles = '/usr/share/vim/vimfiles'
     vimrc    = '/etc/vim/vimrc.local'
 
     run('if [ -d '+vimfiles+' ]; then rm -rf '+vimfiles+'; fi')
     run('if [ -d '+vimrc+' ]; then rm -rf '+vimrc+'; fi')
+
+    run('if [ ! -e /usr/share/vim/vimfiles ]; then ln -s /etc/vim /usr/share/vim/vimfiles; fi')
 # }}}
 
 # }}}
-# Configure Servers {{{
+# Servers {{{
 def backup_webroot(): # {{{
     """
     Backs up the webroot if it exists.
@@ -362,15 +461,18 @@ def backup_webroot(): # {{{
     webroot directory if it exists.
     """
     env.host_string = root_host
-    if len(webroot_dir) and run('[ -e '+webroot_dir+' ]').succeeded:
-        with cd(webroot_dir):
-            run('tar -czf '+remote_backup_dir+'/webroot.tar.gz ./')
+
+    with settings(hide('warnings'), warn_only=True):
+        if len(webroot_dir) and run('[ -e '+webroot_dir+' ]').succeeded:
+            with cd(webroot_dir):
+                run('tar -czf '+remote_backup_dir+'/webroot.tar.gz ./')
 # }}}
 def restore_webroot(): # {{{
     """
     Restore original webroot from backup if the backup exists
     """
     env.host_string = root_host
+
     with settings(hide('warnings'), warn_only=True):
         if run('[ -e '+remote_backup_dir+'/webroot.tar.gz ]').succeeded:
             run('rm -rf '+webroot_dir)
@@ -394,9 +496,12 @@ def install_webroot(): # {{{
     * ``webroot/django``
     * ``webroot/rails``
     """
+    env.host_string = root_host
+
     backup_webroot()
-    run('if [ -e "'+webroot_dir+'"; then rm -rf '+webroot_dir+'; fi')
-    run('mkdir -p '+webroot_dir+'/apache')
+    run('if [ -e "'+webroot_dir+'" ]; then rm -rf '+webroot_dir+'; fi')
+
+
     run('mkdir -p '+webroot_dir+'/django')
     run('mkdir -p '+webroot_dir+'/rails')
 
@@ -406,20 +511,22 @@ def backup_apache_config(): # {{{
     Backs up the apache config to the backup directory
     """
     env.host_string = root_host
-    if run('[ ! -e '+remote_backup_dir+'/apache2.tar.gz ]').succeeded:
-        with cd('/etc'):
-            run('tar -czf '+remote_backup_dir+'/apache2.tar.gz apache2')
+    with settings(hide('warnings'), warn_only=True):
+        if run('[ ! -e '+remote_backup_dir+'/apache2.tar.gz ]').succeeded:
+            with cd('/etc'):
+                run('tar -czf '+remote_backup_dir+'/apache2.tar.gz apache2')
 # }}}
 def restore_apache_config(): # {{{
     """
     Restore original apache config from backup if the backup exists
     """
     env.host_string = root_host
+
     with settings(hide('warnings'), warn_only=True):
-        if run('[ -e /var/dumps/fabric/apache2.tar.gz ]').succeeded:
+        if run('[ -e '+remote_backup_dir+'/apache2.tar.gz ]').succeeded:
             # remove custom apache config
             run('rm -rf /etc/apache2')
-            run('mv /var/dumps/fabric/apache2.tar.gz /etc')
+            run('mv '+remote_backup_dir+'/apache2.tar.gz /etc')
             with cd('/etc'):
                 run('tar -zxf apache2.tar.gz')
                 run('rm -rf apache2.tar.gz')
@@ -449,8 +556,8 @@ def install_apache_config(): # {{{
     # install vhosts
     run('rm -rf /etc/apache2/sites-available/*')
     run('rm -rf /etc/apache2/sites-enabled/*')
-    put(local_config_dir+'/apache/sites-available.tar.gz', '/etc/apache2/sites-available')
-    with cd('/etc/apache2/sites-available'):
+    put(local_tar_dir+'/apache/sites-available.tar.gz', '/etc/apache2')
+    with cd('/etc/apache2'):
         run('tar -zxf sites-available.tar.gz')
         run('rm -rf sites-available.tar.gz')
 
@@ -467,6 +574,15 @@ def install_apache_config(): # {{{
         # by default we don't run apache behind nginx for now
         run('rm -rf default-ssl-nginx')
 
+    # at least install skeleton outline dirs for the vhosts
+    run('mkdir -p '+webroot_dir+'/apache/localhost/public')
+    run('mkdir -p '+webroot_dir+'/apache/generator.'+server_domain+'/public')
+    run('mkdir -p '+webroot_dir+'/apache/django.'+server_domain+'/public')
+    run('mkdir -p '+webroot_dir+'/apache/rails.'+server_domain+'/public')
+
+    # set this up later?
+    upload_website_apache_localhost()
+
     run('service apache2 restart')
 
 # }}}
@@ -475,6 +591,7 @@ def backup_nginx_config(): # {{{
     Backs up the nginx configuration dir into the backup directory
     """
     env.host_string = root_host
+
     if run('[ ! -e '+remote_backup_dir+'/nginx.tar.gz ]').succeeded:
         with cd('/etc'):
             run('tar -czf '+remote_backup_dir+'/nginx.tar.gz nginx')
@@ -484,6 +601,7 @@ def restore_nginx_config(): # {{{
     Restore original nginx config from backup if the backup exists
     """
     env.host_string = root_host
+
     with settings(hide('warnings'), warn_only=True):
         if run('[ -e '+remote_backup_dir+'/nginx.tar.gz ]').succeeded:
             # remove custom apache config
@@ -503,11 +621,15 @@ def install_nginx_config(): # {{{
     of the vhost configs. For now these are not turned on
     by default.
     """
+    env.host_string = root_host
+
+    backup_nginx_config()
+
     # setup vhosts
     run('rm -rf /etc/nginx/sites-available/*')
     run('rm -rf /etc/nginx/sites-enabled/*')
-    put(local_config_dir+'/nginx/sites-available.tar.gz', '/etc/nginx/sites-available')
-    with cd('/etc/nginx/sites-available'):
+    put(local_tar_dir+'/nginx/sites-available.tar.gz', '/etc/nginx')
+    with cd('/etc/nginx'):
         run('tar -zxf sites-available.tar.gz')
         run('rm -rf sites-available.tar.gz')
 
@@ -534,9 +656,9 @@ def install_gitolite_config(): # {{{
     which deletes any and all files that the gitolite setup
     adds to its home directory.
     """
+    env.host_string = deploy_host
 
     # create key pair for deploy user for doing checkouts
-    env.host_string = deploy_host
     with settings(hide('warnings'), warn_only=True):
         run('no | ssh-keygen -t rsa -N "" -f ~/.ssh/id_rsa')
     deploy_ssh_rsa = run('cat ~/.ssh/id_rsa.pub')
@@ -552,8 +674,8 @@ def install_gitolite_config(): # {{{
 
     # set git user config on the server itself for the user we'll be working as
     env.host_string = gitolite_host
-    run('git config --global user.name "'+git_admin_name+'"')
-    run('git config --global user.email '+git_admin_email)
+    run('git config --global user.name "'+gitolite_admin_name+'"')
+    run('git config --global user.email '+gitolite_admin_email)
 
     # because gitolite makes some assumptions about how we'll be using ssh
     # it does not like it if there is already a .ssh folder so we must
@@ -567,8 +689,8 @@ def install_gitolite_config(): # {{{
     #
     # We must do all these things at once to prevent being locked out between
     # commands because fabric retrieves a new connection for each command
-    run("echo '"+local_ssh_rsa+"' > ~/"+git_admin_user+".pub")
-    run('rm -rf .ssh && gl-setup ~/'+git_admin_user+'.pub && yes "" | /usr/share/gitolite/gl-tool shell-add ~/'+git_admin_user+'.pub')
+    run("echo '"+local_ssh_rsa+"' > ~/"+gitolite_admin_user+".pub")
+    run('rm -rf .ssh && gl-setup ~/'+gitolite_admin_user+'.pub && yes "" | /usr/share/gitolite/gl-tool shell-add ~/'+gitolite_admin_user+'.pub')
 
     # save original config information
     git_local_name  = local('git config --global --get user.name', capture=True)
@@ -576,8 +698,8 @@ def install_gitolite_config(): # {{{
 
     local('# SAVED CONFIG: '+git_local_name+' '+git_local_email)
 
-    local('git config --global user.name "'+git_admin_name+'"')
-    local('git config --global user.email '+git_admin_email)
+    local('git config --global user.name "'+gitolite_admin_name+'"')
+    local('git config --global user.email '+gitolite_admin_email)
 
     # make a local dir for checking out the gitolite admin settings
     local('mkdir -p '+gitolite_admin_local)
@@ -591,33 +713,37 @@ def install_gitolite_config(): # {{{
         local("echo '"+deploy_ssh_rsa+"' > keydir/"+deploy_username+".pub")
 
     local('rm -rf '+gitolite_admin_local+'/gitolite-admin/conf/gitolite.conf')
-    local('cp gitolite.conf '+gitolite_admin_local+'/gitolite-admin/conf')
-    local('cp gitolite_repos.conf '+gitolite_admin_local+'/gitolite-admin/conf')
+    local('cp '+local_config_dir+'/gitolite.conf '+gitolite_admin_local+'/gitolite-admin/conf')
+    local('cp '+local_config_dir+'/gitolite_repos.conf '+gitolite_admin_local+'/gitolite-admin/conf')
 
-    for name in team_users:
+    for name in git_repo_devteam:
         with settings(hide('warnings'), warn_only=True):
-            if local('[ -e keys/gitolite/'+name+'.pub ]').succeeded:
-                local('cp keys/gitolite/'+name+'.pub '+gitolite_admin_local+'/gitolite-admin/keydir')
+            if local('[ ! -e '+local_config_dir+'/keys/gitolite/'+name+'.pub ]').succeeded:
+                local('ssh-keygen -t rsa -N "" -f '+local_config_dir+'/keys/gitolite/'+name)
+
+            local('cp '+local_config_dir+'/keys/gitolite/'+name+'.pub '+gitolite_admin_local+'/gitolite-admin/keydir')
 
     with lcd(gitolite_admin_local+'/gitolite-admin'):
-        local("git add .")
-        local("git commit -a -m 'Added users'")
-        local("git push origin master")
+        local('git add .')
+        local('git commit -a -m "Added users"')
+        local('git push origin master')
 
     # restore original config information
-    local('git config --global user.name "'+git_local_username+'"')
+    local('git config --global user.name "'+git_local_name+'"')
     local('git config --global user.email '+git_local_email)
+
 # }}}
-def clean_gitolite(): # {{{
+def clean_gitolite_config(): # {{{
     """
     Delete the gitolite specific files for repositories and config and such
     """
     env.host_string = root_host
+
     with cd('/var/lib/gitolite'):
         run('rm -rf .gitolite .gitolite.rc projects.list repositories .cache *.pub .ssh')
 
 # }}}
-def upload_website_apache_localhost(): # {{{
+def upload_website_apache_localhost(host=root_host): # {{{
     """
     Uploads the actual publicly accessible files for the default localhost
 
@@ -626,9 +752,10 @@ def upload_website_apache_localhost(): # {{{
     which has a call to ``phpinfo()`` and a default index file
     so you can see that the server is working.
     """
-    env.host_string = deploy_host
+    env.host_string = host
+
     run('mkdir -p '+webroot_dir+'/apache/localhost')
-    put(local_config_dir+'/apache/localhost/public.tar.gz', webroot_dir+'/apache/localhost')
+    put(local_tar_dir+'/apache/localhost/public.tar.gz', webroot_dir+'/apache/localhost')
     with cd(webroot_dir+'/apache/localhost'):
         run('tar -zxf public.tar.gz')
         run('rm -rf public.tar.gz')
@@ -640,7 +767,7 @@ def upload_website_apache_localhost(): # {{{
 #    Installs the files for the generatedata PHP script in a virtual host.
 #    """
 #    run('mkdir -p '+webroot_dir+'/apache/generatedata.'+server_domain+'')
-#    put(local_config_dir+'/apache/generatedata.'+server_domain+'/public.tar.gz', webroot_dir+'/apache/generatedata.'+server_domain+'')
+#    put(local_tar_dir+'/apache/generatedata.'+server_domain+'/public.tar.gz', webroot_dir+'/apache/generatedata.'+server_domain+'')
 #    with cd(webroot_dir+'/apache/generatedata.'+server_domain+''):
 #        run('tar -zxf public.tar.gz')
 #        run('rm -rf public.tar.gz')
@@ -650,12 +777,13 @@ def upload_website_apache_localhost(): # {{{
 ## }}}
 
 # }}}
-# Ubuntu apt-get software {{{
+# Aptget {{{
 def aptget_software_updates(): # {{{
     """
     Download and install the latest security patches for Ubuntu.
     """
     env.host_string = root_host
+    run('apt-get update')
     run('yes | apt-get upgrade')
 
 # }}}
@@ -668,7 +796,7 @@ def aptget_compiler(): # {{{
     run('yes | apt-get install build-essential gcc g++ make')
 
 # }}}
-def aptget_common_headers(): # {{{
+def aptget_common_dev_headers(): # {{{
     """
     Install database, image and xml dev headers for compiling modules
 
@@ -676,15 +804,23 @@ def aptget_common_headers(): # {{{
     headers around if we're going to compile from scratch
     """
     env.host_string = root_host
-    run('yes | apt-get install libmysqlclient-dev libpq-dev libmagickcore-dev libxml2-dev libxslt1-dev')
+    run('yes | apt-get install libmysqlclient-dev libpq-dev libmagickwand-dev libxml2-dev libxslt1-dev python-dev ruby-dev libcurl4-openssl-dev')
 
 # }}}
-def aptget_version_control(): # {{{
+def aptget_git_server(): # {{{
     """
-    Install git, subversion and servers for both of them
+    Install git, the gitolite repo server and the gitweb frontend browser
     """
     env.host_string = root_host
-    run('yes | apt-get install git gitolite gitweb subversion libapache2-svn')
+    run('yes | apt-get install git gitolite gitweb')
+
+# }}}
+def aptget_svn_server(): # {{{
+    """
+    Install subversion and apache plugin
+    """
+    env.host_string = root_host
+    run('yes | apt-get install subversion libapache2-svn')
 
 # }}}
 def aptget_databases(): # {{{
@@ -708,16 +844,25 @@ def aptget_lamp(): # {{{
 # }}}
 def a2enmod_rewrite(): # {{{
     """
-    Mod rewrite is not enabled by default, so enable it.
+    Enable the Rewrite module
     """
     env.host_string = root_host
     run('a2enmod rewrite')
     run('service apache2 restart')
 
 # }}}
+def a2enmod_passenger(): # {{{
+    """
+    Enable the Passenger module for serving Ruby apps
+    """
+    env.host_string = root_host
+    run('a2enmod passenger')
+    run('service apache2 restart')
+
+# }}}
 def a2enmod_proxy(): # {{{
     """
-    Mod proxy is not enable by default, so enable it.
+    Enable the Proxy and Proxy HTTP modules
     """
     env.host_string = root_host
     run('a2enmod proxy')
@@ -725,9 +870,27 @@ def a2enmod_proxy(): # {{{
     run('service apache2 restart')
 
 # }}}
+def aptget_ruby(): # {{{
+    """
+    Install the Ubuntu-packaged ruby from the main system including dev headers
+    """
+    env.host_string = root_host
+    run('yes | apt-get install ruby ri ruby-dev')
+
+# }}}
+def aptget_passenger(): # {{{
+    """
+    Install and enable the apache Passenger module for running ruby apps
+    """
+    env.host_string = root_host
+    run('yes | apt-get install libapache2-mod-passenger')
+    run('a2enmod passenger')
+    run('service apache2 restart')
+
+# }}}
 def aptget_mod_wsgi(): # {{{
     """
-    Install and enable the WSGI module for running python apps
+    Install and enable the apache WSGI module for running python apps
     """
     env.host_string = root_host
     run('yes | apt-get install libapache2-mod-wsgi')
@@ -752,10 +915,10 @@ def aptget_uwsgi(): # {{{
     env.host_string = root_host
     run('add-apt-repository ppa:uwsgi/release')
     run('yes | apt-get update')
-    run('yes | apt-get install uwsgi-python2.6 uwsgi-common uwsgi')
+    run('yes | apt-get install uwsgi-python')
 
 # }}}
-def aptget_mailserver(): # {{{
+def aptget_mail_server(): # {{{
     """
     Install the commonly desired tools for setting up a mail server
     """
@@ -773,27 +936,28 @@ def aptget_vim73(): # {{{
     * ``ctags`` exuberrant ctags
     * ``par`` the paragraph formatter
     """
+    env.host_string = root_host
     run('add-apt-repository ppa:ubuntu-backports-testers/ppa')
     run('yes | apt-get update')
     run('yes | apt-get install vim ctags par')
 
 # }}}
-def aptget_misc_utilities(): # {{{
+def aptget_init(): # {{{
     """
-    Installs ``locate``, ``tmux``, ``add-apt-repository``
+    Updates package list and installs: locate, tmux, add-apt-repository
 
     Some   various  handy   things   I   alwas  want,   plus
     ``add-apt-repository`` is currently  a dependency of the
     ubuntu packaging tasks, so do  not remove that or remove
     calls to this function
     """
+    env.host_string = root_host
+    run('apt-get update')
     run('yes | apt-get install python-software-properties mlocate tmux')
 # }}}
 
 # }}}
-
-# Ruby and Python environments
-# Virtualenv in the System Python {{{
+# Python {{{
 def install_python_distribute(): # {{{
     """
     Installs the "distribute" python package, a setuptools clone
@@ -833,9 +997,6 @@ def install_python_virtualenv(): # {{{
     env.host_string = root_host
     run('pip install virtualenv virtualenvwrapper')
 # }}}
-
-# }}}
-# Per User Ruby and Python Environments {{{
 def configure_python_virtualenv(target_host): # {{{
     """
     Add virtualenv capabilites to this user.
@@ -852,7 +1013,21 @@ def configure_python_virtualenv(target_host): # {{{
     run('echo \'source /usr/local/bin/virtualenvwrapper.sh\' >> ~/.bashrc')
 
 # }}}
-def install_ruby_rvm(target_host): # {{{
+def install_sys_djangocms(): # {{{
+    """
+    Download and install Django CMS with pip
+
+    Add rvm capabilites to this user. Mostly this
+    just adds the config settings to the ~/.bashrc to
+    provide access to ``rvm``. This is only applicable
+    on a per user basis.
+    """
+    env.host_string = root_host
+
+    run('pip install '+' '.join(djangocms_deps))
+
+# }}}
+def install_env_djangocms(target_host=deploy_host, virtualenv='djangocms_test'): # {{{
     """
     Download and install RVM (the Ruby Version Manager)
 
@@ -862,16 +1037,99 @@ def install_ruby_rvm(target_host): # {{{
     on a per user basis.
     """
     env.host_string = target_host
+
+    with run('. ~/Envs/'+virtualenv+'/bin/activate'):
+        run('pip install '+' '.join(djangocms_deps))
+
+# }}}
+
+# }}}
+# Ruby {{{
+def install_rubygems(): # {{{
+    """
+    Download and install the latest rubygems system wide
+    """
+    env.host_string = root_host
+
+    with settings(hide('warnings'), warn_only=True):
+        if run('wget '+rubygems_url+'/'+rubygems_tarball).succeeded:
+            run('tar -zxf '+rubygems_tarball)
+            with cd(rubygems_vers):
+                run('ruby setup.rb')
+                run('ln -s /usr/bin/gem1.8 /usr/bin/gem')
+
+# }}}
+def install_rails_server(): # {{{
+    """
+    Download and install rails 2.3.8 system wide
+
+    Ruby  1.8  with  rails   2.3.8  keeps  the  main  server
+    compatible with radiantcms. Latest ruby and rails can be
+    found in rvm for the deploy user.
+    """
+    env.host_string = root_host
+
+    run('gem install passenger')
+    run('gem install rails --version 2.3.8')
+    run('gem install '+' '.join(rails_gem_deps))
+
+# }}}
+def install_mod_passenger_gem(): # {{{
+    """
+    Download and install the latest passenger gem into the system apache
+    """
+    env.host_string = root_host
+
+    run('passenger-install-apache2-module -a')
+    run('passenger-install-apache2-module --snippet | grep --color=none ^LoadModule > /etc/apache2/mods-available/passenger.load')
+    run('passenger-install-apache2-module --snippet | grep --color=none ^Passenger > /etc/apache2/mods-available/passenger.conf')
+
+    run('a2enmod passenger')
+    run('service apache2 restart')
+
+    # requires recompilation and so, means we can't use the ubuntu packaged nginx
+    #run('passenger-install-nginx-module')
+    #run('service nginx restart')
+
+# }}}
+def install_rvm(target_host=deploy_host): # {{{
+    """
+    Download and install RVM (the Ruby Version Manager) for a given user
+
+    Add rvm capabilites to this  user. Mostly this just adds
+    the config  settings to the ~/.bashrc  to provide access
+    to ``rvm``. This is only applicable on a per user basis.
+    """
+    env.host_string = target_host
+
     run('bash < <( curl http://rvm.beginrescueend.com/releases/rvm-install-head )')
     run('echo >> .bashrc')
     run('echo \'[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"\' >> .bashrc')
 
 # }}}
+def install_rvm_rails_server(target_host=deploy_host): # {{{
+    """
+    Install Ruby 1.9.2 and Rails 3.x from rvm for the given user
+
+    Also installs a number of pretty standard desirably gems. Don't bother
+    with the XSLT lib because it's broken in 1.9.
+    """
+    env.host_string = target_host
+
+    run('rvm install 1.9.2')
+    with prefix('rvm 1.9.2'):
+        run('gem install passenger rails '+' '.join(rails_gem_deps[:-1]))
 
 # }}}
 
-# Supporting Cast of Characters
-# Generate Custom Configs Locally {{{
+# }}}
+
+
+# SUPPORT TASKS
+################################################################
+# Modular and repeatable helpers that other tasks can use
+
+# Generate Configs
 def regen_configs(): # {{{
     """
     Generate server config files, like vhosts, based on templates.
@@ -905,6 +1163,29 @@ def regen_configs(): # {{{
         local("echo 'RW+  = @devteam' >> "+local_config_dir+"/gitolite_repos.conf")
 
 # }}}
+def regen_tarball(srcdir, source): # {{{
+    """
+    Generate a tarball of a config dir
+
+    This is a helper function for regenerating all the config tarballs for upload
+
+    Files end up in
+
+    * ``conf/tarballs``
+    """
+
+    target_dir = os.path.join(local_tar_dir, srcdir)
+    target     = os.path.join(target_dir, source+'.tar.gz')
+    srcdir     = os.path.join(local_config_dir, srcdir)
+
+    local('if [ -e '+target+' ]; then mv '+target+' '+target+'.tar.gz.bak.'+get_cur_timestamp+'; fi')
+    local('mkdir -p '+target_dir)
+
+    with settings(hide('warnings'), warn_only=True):
+        if local('[ -e "'+srcdir+'" ]').succeeded:
+            with lcd(srcdir):
+                local('tar -czf '+target+' '+source+'')
+
 def regen_tarballs(): # {{{
     """
     Tarball the config tarballs for ease of upload
@@ -919,29 +1200,19 @@ def regen_tarballs(): # {{{
     * ``conf/apache/sites-available``
     * ``conf/nginx/sites-available``
     """
-    source = 'skel'
-    target = 'skel'
-    with lcd(local_config_dir):
-        local('if [ -e '+target+'.tar.gz ]; then mv '+target+'.tar.gz '+target+'.tar.gz.bak.'+get_cur_timestamp+'; fi')
-        local('tar -czf '+target+'.tar.gz '+source+'')
+    local('mkdir -p '+local_backup_dir)
+    local('mkdir -p '+local_tar_dir)
 
-    source = 'public'
-    target = 'public'
-    with lcd(local_config_dir+'/apache/localhost'):
-        local('if [ -e '+target+'.tar.gz ]; then mv '+target+'.tar.gz '+target+'.tar.gz.bak.'+get_cur_timestamp+'; fi')
-        local('tar -czf '+target+'.tar.gz '+source+'')
+    configs = [
+        {'source': 'skel',            'srcdir': ''},
+        {'source': 'public',          'srcdir': 'apache/localhost'},
+        {'source': 'sites-available', 'srcdir': 'apache'},
+        {'source': 'sites-available', 'srcdir': 'nginx'},
+    ]
 
-    source = './'
-    target = '../sites-available'
-    with lcd(local_config_dir+'/apache/sites-available'):
-        local('if [ -e '+target+'.tar.gz ]; then mv '+target+'.tar.gz '+target+'.tar.gz.bak.'+get_cur_timestamp+'; fi')
-        local('tar -czf '+target+'.tar.gz '+source+'')
-
-    source = './'
-    target = '../sites-available'
-    with lcd(local_config_dir+'/nginx/sites-available'):
-        local('if [ -e '+target+'.tar.gz ]; then mv '+target+'.tar.gz '+target+'.tar.gz.bak.'+get_cur_timestamp+'; fi')
-        local('tar -czf '+target+'.tar.gz '+source+'')
+    import os
+    for config in configs:
+        regen_tarball(source=config['source'], srcdir=config['srcdir'])
 
 # }}}
 def docs(): # {{{
@@ -954,7 +1225,8 @@ def docs(): # {{{
 # }}}
 
 # }}}
-# Misc Tests and Cleaning{{{
+
+# Tests 
 def test_local(): # {{{
     """
     Test echo on localhost. Reports the git user settings and the environment $SHELL variable.
@@ -968,25 +1240,36 @@ def test_remote(user='root'): # {{{
     """
     Test a remote host, takes user account login name as a single argument
     """
-    env.host_string = host+'@'+server_fqdn
+    env.host_string = user+'@'+server_fqdn
+
+    run('rvm')
     git_username    = run('git config --global --get user.name')
     run("echo 'Git User: "+git_username+"'")
     run('echo "Current Shell: $SHELL"')
 
 # }}}
 
-def clean(): # {{{
+# Cleaning
+def clean(keys=False): # {{{
     """
-    This is more like make clean. This deletes all the custom config files
-    generated by regen_configs()
+    This is more like make clean. This deletes all the custom config files generated by regen_configs()
     """
-    # apache
-    local('rm -rf '+local_config_dir+'/apache/localhost/public.tar.gz*')
-    local('rm -rf '+local_config_dir+'/apache/sites-available.tar.gz*')
-    local('rm -rf '+local_config_dir+'/apache2/sites-available/*')
 
-    # nginx
-    local('rm -rf '+local_config_dir+'/nginx/sites-available.tar.gz*')
+    print '''
+    fab clean
+        WARNING, this task will delete your 
+        generated configs and backup files
+
+    '''
+    if not confirm('Are you sure you want to do this?'):
+        return
+
+    # local cache
+    local('rm -rf '+local_tar_dir)
+    local('rm -rf '+local_backup_dir)
+
+    # vhosts
+    local('rm -rf '+local_config_dir+'/apache/sites-available/*')
     local('rm -rf '+local_config_dir+'/nginx/sites-available/*')
 
     # git
@@ -996,12 +1279,17 @@ def clean(): # {{{
     # compiled python files
     local('find ../ -type f -iname "*.pyc" -exec rm -rf "{}" +')
 
+    if keys:
+        local('rm -rf '+local_config_dir+'/keys/gitolite/*')
+        local('rm -rf '+local_config_dir+'/keys/shell/*')
+
 # }}}
 def clean_remote_config_dir(): # {{{
     """
     Remove the main configuration uploads dir
     """
     env.host_string = root_host
+
     run('if [ -e '+remote_config_dir+' ]; then rm -rf '+remote_config_dir+'; fi')
 # }}}
 def clean_remote_backup_dir(): # {{{
@@ -1009,11 +1297,11 @@ def clean_remote_backup_dir(): # {{{
     Remove the main remote backup dir
     """
     env.host_string = root_host
+
     run('if [ -e '+remote_backup_dir+' ]; then rm -rf '+remote_backup_dir+'; fi')
 # }}}
 
-# }}}
-# User and Permissions Helpers {{{
+# User and Permissions Helpers
 def configure_restricted_share(user, group, d): # {{{
     """
     Set group ownership of a directory
@@ -1022,6 +1310,8 @@ def configure_restricted_share(user, group, d): # {{{
     files to a directory but not automatically be able to edit
     or change the contents of that directory.
     """
+    env.host_string = root_host
+
     run('chown '+user+'.'+group+' '+d)
     run('chmod g+w '+d)
 
@@ -1034,6 +1324,8 @@ def configure_open_share(user, group, d): # {{{
     to always be able to have write permissions on all files
     in this directory, even new files created by other people.
     """
+    env.host_string = root_host
+
     run('chown -R '+user+'.'+group+' '+d)
     run('chmod -R g+w '+d)
     run('find '+d+' -type d -exec chmod g+s "{}" +')
@@ -1047,6 +1339,7 @@ def clone_root_pubkey(user, home): # {{{
     avoid the need for a password when logging in.
     """
     env.host_string = root_host
+
     run('mkdir -p '+home+'/.ssh')
     run('cp /root/.ssh/authorized_keys '+home+'/.ssh/authorized_keys')
     run('chown -R '+user+'.'+user+' '+home+'/.ssh')
@@ -1059,11 +1352,12 @@ def add_custom_user(user, passw, fancy=True): # {{{
     from the config in the local skel dir
     """
     env.host_string = root_host
+
     run('useradd --skel '+remote_config_dir+'/skel --create-home --home-dir /home/'+user+' --shell /bin/bash '+user)
     run('yes "'+passw+'" | passwd ' + user)
 
 # }}}
-def add_prompt_to_user(home='~', user=''): # {{{
+def add_prompt_to_user(home='/root', user='root'): # {{{
     """
     Add an awesomely cool shell prompt for a user 
 
@@ -1079,10 +1373,13 @@ def add_prompt_to_user(home='~', user=''): # {{{
     ownership over to the user in question, also you'll want
     the files to be uploaded to the proper home directory.
     """
+    env.host_string = root_host
+
     put(local_config_dir+'/skel/.colors_prompts', home)
     put(local_config_dir+'/skel/.bash_prompt', home)
+    put(local_config_dir+'/skel/.gemrc', home)
     with settings(hide('warnings'), warn_only=True):
-        if run('[ ! -e '+home+'/.bashrc.bak ]'):
+        if run('[ ! -e '+home+'/.bashrc.bak ]').succeeded:
             run('cp '+home+'/.bashrc '+home+'/.bashrc.bak')
             run('echo >> '+home+'/.bashrc')
             run("echo 'if [ -f "+home+"/.colors_prompts ]; then . "+home+"/.colors_prompts; fi' >> "+home+"/.bashrc")
@@ -1091,6 +1388,20 @@ def add_prompt_to_user(home='~', user=''): # {{{
     # in other words if this was done as root
     if home != '~' and len(user) > 0:
         run('chown -R '+user+'.'+user+' '+home)
+
+def select_prompt(name='remote_root', host=root_host):
+    """
+    Change the ~/.bash_prompt var to use the special red root prompt
+
+    There are currently two prompts to select from, one is a regular
+    user prompt that is green and red, and the other is the same
+    but the all red to alter you that you are running commands as
+    actual root and as so, to be careful.
+    """
+    env.host_string = host
+
+    # choose the root prompt instead of the user prompt
+    run("echo 'export PS1=$"+name+"' > ~/.bash_prompt")
 
 # }}}
 def backup_user_home(user): # {{{
@@ -1101,6 +1412,7 @@ def backup_user_home(user): # {{{
     then create a backup for that user in remote_backup_dir/home_user.tar.gz
     """
     env.host_string = root_host
+
     bak_file = remote_backup_dir+'/home_'+user+'.tar.gz'
     with settings(hide('warnings'), warn_only=True):
         if run('[ ! -e '+bak_file+' ]').succeeded:
@@ -1117,6 +1429,7 @@ def restore_user_home(user): # {{{
     current home directory and restore from the backup.
     """
     env.host_string = root_host
+
     bak_file = remote_backup_dir+'/home_'+user+'.tar.gz'
     with settings(hide('warnings'), warn_only=True):
         if run('[ -e '+bak_file+' ]').succeeded:
@@ -1150,6 +1463,4 @@ def reskel_existing_user(user, home=''): # {{{
         put(f, home)
 
     run('chown -R '+user+'.'+user+' '+home)
-# }}}
-
 # }}}
