@@ -1,24 +1,24 @@
 #!/usr/bin/env bash
 
-set -o errtrace
-set -o errexit
-
-export PS4='+[${BASH_SOURCE}] : ${LINENO} : ${FUNCNAME[0]:+${FUNCNAME[0]}() $ }'
+#set -o errtrace
+#set -o errexit
+#
+#export PS4='+[${BASH_SOURCE}] : ${LINENO} : ${FUNCNAME[0]:+${FUNCNAME[0]}() $ }'
 
 url="github.com/rocksolidwebdesign/Ubuntu-Server-In-A-Box.git"
 git_url="git://$url"
 https_url="https://$url"
 
-if ! git clone "$git_url" ubuntufab ; then
+if ! git clone "$git_url" ; then
     printf "\nERROR: Error using $git_url"
 
-    if ! git clone "$https_url" ubuntufab ; then
+    if ! git clone "$https_url" ; then
         printf "\nERROR: Error using $https_url also. Guess you'll have to install manually."
         exit 1
     fi
 fi
 
-cd ubuntufab
+cd Ubuntu-Server-In-A-Box
 if [ "$VIRTUAL_ENV" != "" ]; then
     # if the user is currently in a virtual environment then use that
     pip install -r requirements.txt
