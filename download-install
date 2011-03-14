@@ -29,4 +29,3 @@ fi
 
 cd maverick_cloud
 cp settings.py.sample settings.py
-fab setup

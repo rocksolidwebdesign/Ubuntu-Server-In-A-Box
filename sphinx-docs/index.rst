@@ -31,6 +31,7 @@ Quick Start
 To give it the old college try, use this handy installer script::
 
     bash < <( curl https://github.com/rocksolidwebdesign/Ubuntu-Server-In-A-Box/raw/master/download-install )
+    fab setup
 
 This script should  install Fabric if you don't  have it and
 should initiate a session, all  you need is the hostname and
