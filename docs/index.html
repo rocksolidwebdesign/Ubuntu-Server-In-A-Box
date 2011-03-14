@@ -148,7 +148,7 @@ continuing.:</p>
 please see the Fabric documentation for installation:</p>
 <p><a class="reference external" href="http://docs.fabfile.org/en/1.0.0/installation.html">http://docs.fabfile.org/en/1.0.0/installation.html</a></p>
 <p>All the main files for the current system live in the
-<tt class="docutils literal"><span class="pre">maverick_cloud</span></tt> folder, see doc:<cite>configuration</cite> for an exaplanation
+<tt class="docutils literal"><span class="pre">maverick_cloud</span></tt> folder, see <a class="reference internal" href="configuration.html"><em>Configuration</em></a> for an explanation
 of how this folder got its name.</p>
 <p>Next copy and edit  <tt class="docutils literal"><span class="pre">settings.py.sample</span></tt>:</p>
 <div class="highlight-python"><pre>cd maverick_cloud
@@ -169,6 +169,36 @@ a feel for how it works:</p>
 </div>
 <p>and when you&#8217;re all done:</p>
 <div class="highlight-python"><pre>user@somehost ~/Ubuntu-Server-In-A-Box$ fab clean</pre>
+</div>
+<div class="section" id="salting-to-taste">
+<h2>Salting To Taste<a class="headerlink" href="#salting-to-taste" title="Permalink to this headline">¶</a></h2>
+<p>This fabfile installs  a bunch of stuff if you  just use the
+setup task and you likely don&#8217;t  want all of it. For example
+you might  not care about  nginx or  if you&#8217;re running  on a
+local VM then you probably won&#8217;t be needing a git server.</p>
+<p>All the available tasks can be seen with:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">fab</span> <span class="o">--</span><span class="nb">list</span>
+</pre></div>
+</div>
+<p>And  you can  get a  better overview  of what  does what  by
+reading <a class="reference internal" href="tasks.html"><em>Tasks</em></a>.  With that  said, here are  some other
+sub tasks you may wish to run independently</p>
+<p>Pretty much all of these  tasks require that you first setup
+your users with:</p>
+<div class="highlight-python"><pre>fab setup_users</pre>
+</div>
+<p>and then you can run some or all of the following:</p>
+<div class="highlight-python"><pre>fab setup_apache
+fab setup_nginx
+
+fab setup_git_server
+
+fab setup_python
+fab setup_ruby</pre>
+</div>
+<p>see <tt class="docutils literal"><span class="pre">fab</span> <span class="pre">--list</span></tt> and  <a class="reference internal" href="tasks.html"><em>Tasks</em></a> for more detail because
+there are even  smaller and more modular tasks  that you can
+run to create your own custom tailored server.</p>
 </div>
 </div>
 <div class="section" id="what-it-does">
@@ -456,7 +486,10 @@ machine for development.</p>
 <li><a class="reference internal" href="#quick-start">Quick Start</a></li>
 <li><a class="reference internal" href="#requirements">Requirements</a></li>
 <li><a class="reference internal" href="#basic-usage">Basic Usage</a></li>
-<li><a class="reference internal" href="#complete-install-instructions">Complete Install Instructions</a></li>
+<li><a class="reference internal" href="#complete-install-instructions">Complete Install Instructions</a><ul>
+<li><a class="reference internal" href="#salting-to-taste">Salting To Taste</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#what-it-does">What It Does</a></li>
 <li><a class="reference internal" href="#what-you-get">What You Get</a></li>
 <li><a class="reference internal" href="#where-s-my-stuff">Where&#8217;s My Stuff?</a><ul>

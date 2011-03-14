@@ -135,7 +135,7 @@ please see the Fabric documentation for installation:
 http://docs.fabfile.org/en/1.0.0/installation.html
 
 All the main files for the current system live in the
-``maverick_cloud`` folder, see doc:`configuration` for an exaplanation
+``maverick_cloud`` folder, see :doc:`configuration` for an explanation
 of how this folder got its name. 
 
 Next copy and edit  ``settings.py.sample``::
@@ -161,6 +161,42 @@ a feel for how it works::
 and when you're all done::
 
     user@somehost ~/Ubuntu-Server-In-A-Box$ fab clean
+
+----------------
+Salting To Taste
+----------------
+
+This fabfile installs  a bunch of stuff if you  just use the
+setup task and you likely don't  want all of it. For example
+you might  not care about  nginx or  if you're running  on a
+local VM then you probably won't be needing a git server.
+
+All the available tasks can be seen with::
+
+    fab --list
+
+And  you can  get a  better overview  of what  does what  by
+reading :doc:`tasks`.  With that  said, here are  some other
+sub tasks you may wish to run independently
+
+Pretty much all of these  tasks require that you first setup
+your users with::
+
+    fab setup_users
+
+and then you can run some or all of the following::
+
+    fab setup_apache
+    fab setup_nginx
+
+    fab setup_git_server
+
+    fab setup_python
+    fab setup_ruby
+
+see ``fab --list`` and  :doc:`tasks` for more detail because
+there are even  smaller and more modular tasks  that you can
+run to create your own custom tailored server.
 
 .. _overview:
 
