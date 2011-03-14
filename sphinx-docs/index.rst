@@ -134,7 +134,17 @@ please see the Fabric documentation for installation:
 
 http://docs.fabfile.org/en/1.0.0/installation.html
 
-next edit  settings.py you'll  need to  at least  change the
+All the main files for the current system live in the
+``maverick_cloud`` folder, see doc:`configuration` for an exaplanation
+of how this folder got its name. 
+
+Next copy and edit  ``settings.py.sample``::
+
+    cd maverick_cloud
+    cp settings.py.sample settings.py
+    vim settings.py
+
+you'll  need to  at least  change the
 server's hostname and master  usernames including the deploy
 user and  the main  username. you'll  probably also  want to
 change the name and email  for the git repository admin. and

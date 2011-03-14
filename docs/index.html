@@ -147,7 +147,15 @@ continuing.:</p>
 <p>otherwise, if you&#8217;re not on ubuntu for your local machine,
 please see the Fabric documentation for installation:</p>
 <p><a class="reference external" href="http://docs.fabfile.org/en/1.0.0/installation.html">http://docs.fabfile.org/en/1.0.0/installation.html</a></p>
-<p>next edit  settings.py you&#8217;ll  need to  at least  change the
+<p>All the main files for the current system live in the
+<tt class="docutils literal"><span class="pre">maverick_cloud</span></tt> folder, see doc:<cite>configuration</cite> for an exaplanation
+of how this folder got its name.</p>
+<p>Next copy and edit  <tt class="docutils literal"><span class="pre">settings.py.sample</span></tt>:</p>
+<div class="highlight-python"><pre>cd maverick_cloud
+cp settings.py.sample settings.py
+vim settings.py</pre>
+</div>
+<p>you&#8217;ll  need to  at least  change the
 server&#8217;s hostname and master  usernames including the deploy
 user and  the main  username. you&#8217;ll  probably also  want to
 change the name and email  for the git repository admin. and
