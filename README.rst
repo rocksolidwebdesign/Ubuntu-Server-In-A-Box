@@ -23,7 +23,7 @@ You will (most likely) need, in the following order:
 
 * Your local admin password (to install fabric)
 * The hostname of a server with Ubuntu 10.10 on it
-* The root password for that Ubuntu 10.10
+* The root password for that Ubuntu 10.10 server
 
 here's it is in script form::
 
