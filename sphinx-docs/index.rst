@@ -76,7 +76,7 @@ Install requirements (Fabric is currently the only requirement)::
 
 Copy the example settings file as ``settings.py``::
 
-    cd quickfab/ubuntu
+    cd maverick_cloud
     cp settings.py.sample settings.py
 
 Customize the settings to your  taste (or don't, you can run
@@ -111,23 +111,23 @@ Complete Install Instructions
 Here are the longer  and more complete download instructions
 with explanations::
 
-    user@somehost ~/fabfiles/ubuntucloud$ git clone http://github.com/rocksolidwebdesign/QuickFab.git cloudfab
-    user@somehost ~$ cd cloudfab
+    user@somehost ~$ git clone http://github.com/rocksolidwebdesign/Ubuntu-Server-In-A-Box.git
+    user@somehost ~$ cd Ubuntu-Server-In-A-Box
 
 you'll need Python's Fabric best retrieved through pip::
 
-    user@somehost ~/cloudfab$ sudo pip install -r requirements.txt
+    user@somehost ~/Ubuntu-Server-In-A-Box$ sudo pip install -r requirements.txt
 
 if you don't have pip, or a pip version that's recent enough to
 support requirements, then you probably have ``easy_install``::
 
-    user@somehost ~/cloudfab$ sudo easy_install -r requirements.txt
+    user@somehost ~/Ubuntu-Server-In-A-Box$ sudo easy_install fabric
 
 and if you  don't have ``easy_install`` or  pip, then you'll
 probably  need and  want  to  get one  or  the other  before
 continuing.::
 
-    user@somehost ~/cloudfab$ sudo apt-get install python-pip
+    user@somehost ~/Ubuntu-Server-In-A-Box$ sudo apt-get install python-pip
 
 otherwise, if you're not on ubuntu for your local machine,
 please see the Fabric documentation for installation:
@@ -146,7 +146,11 @@ work and  install out of the  box with the example  users if
 you're just testing this for the  first time, so you can get
 a feel for how it works::
 
-    user@somehost ~/cloudfab$ fab setup_all
+    user@somehost ~/Ubuntu-Server-In-A-Box$ fab setup
+
+and when you're all done::
+
+    user@somehost ~/Ubuntu-Server-In-A-Box$ fab clean
 
 .. _overview:
 

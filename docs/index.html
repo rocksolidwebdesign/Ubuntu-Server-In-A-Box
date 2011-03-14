@@ -102,7 +102,7 @@ cd Ubuntu-Server-In-A-Box</pre>
 <div class="highlight-python"><pre>pip install -r requirements.txt</pre>
 </div>
 <p>Copy the example settings file as <tt class="docutils literal"><span class="pre">settings.py</span></tt>:</p>
-<div class="highlight-python"><pre>cd quickfab/ubuntu
+<div class="highlight-python"><pre>cd maverick_cloud
 cp settings.py.sample settings.py</pre>
 </div>
 <p>Customize the settings to your  taste (or don&#8217;t, you can run
@@ -129,20 +129,20 @@ of what the system actually does and how to customize it for your needs</p>
 <span id="install"></span><h1>Complete Install Instructions<a class="headerlink" href="#complete-install-instructions" title="Permalink to this headline">¶</a></h1>
 <p>Here are the longer  and more complete download instructions
 with explanations:</p>
-<div class="highlight-python"><pre>user@somehost ~/fabfiles/ubuntucloud$ git clone http://github.com/rocksolidwebdesign/QuickFab.git cloudfab
-user@somehost ~$ cd cloudfab</pre>
+<div class="highlight-python"><pre>user@somehost ~$ git clone http://github.com/rocksolidwebdesign/Ubuntu-Server-In-A-Box.git
+user@somehost ~$ cd Ubuntu-Server-In-A-Box</pre>
 </div>
 <p>you&#8217;ll need Python&#8217;s Fabric best retrieved through pip:</p>
-<div class="highlight-python"><pre>user@somehost ~/cloudfab$ sudo pip install -r requirements.txt</pre>
+<div class="highlight-python"><pre>user@somehost ~/Ubuntu-Server-In-A-Box$ sudo pip install -r requirements.txt</pre>
 </div>
 <p>if you don&#8217;t have pip, or a pip version that&#8217;s recent enough to
 support requirements, then you probably have <tt class="docutils literal"><span class="pre">easy_install</span></tt>:</p>
-<div class="highlight-python"><pre>user@somehost ~/cloudfab$ sudo easy_install -r requirements.txt</pre>
+<div class="highlight-python"><pre>user@somehost ~/Ubuntu-Server-In-A-Box$ sudo easy_install fabric</pre>
 </div>
 <p>and if you  don&#8217;t have <tt class="docutils literal"><span class="pre">easy_install</span></tt> or  pip, then you&#8217;ll
 probably  need and  want  to  get one  or  the other  before
 continuing.:</p>
-<div class="highlight-python"><pre>user@somehost ~/cloudfab$ sudo apt-get install python-pip</pre>
+<div class="highlight-python"><pre>user@somehost ~/Ubuntu-Server-In-A-Box$ sudo apt-get install python-pip</pre>
 </div>
 <p>otherwise, if you&#8217;re not on ubuntu for your local machine,
 please see the Fabric documentation for installation:</p>
@@ -157,7 +157,10 @@ terms of defining your team members, but this example should
 work and  install out of the  box with the example  users if
 you&#8217;re just testing this for the  first time, so you can get
 a feel for how it works:</p>
-<div class="highlight-python"><pre>user@somehost ~/cloudfab$ fab setup_all</pre>
+<div class="highlight-python"><pre>user@somehost ~/Ubuntu-Server-In-A-Box$ fab setup</pre>
+</div>
+<p>and when you&#8217;re all done:</p>
+<div class="highlight-python"><pre>user@somehost ~/Ubuntu-Server-In-A-Box$ fab clean</pre>
 </div>
 </div>
 <div class="section" id="what-it-does">
