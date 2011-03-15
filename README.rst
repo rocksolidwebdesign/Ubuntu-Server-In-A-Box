@@ -24,12 +24,9 @@ Quick Install
 
 `Documentation <https://github.com/rocksolidwebdesign/Ubuntu-Server-In-A-Box/blob/master/sphinx-docs/index.rst>`_
 
-Just read the part about requirements and possibly also read
+*Just read the part about requirements and possibly also read
 about basic  usage. This should  help clear up  any problems
-and make the quick install truly worth of its name :)
-
-A One Liner
------------
+and make the quick install truly worth of its name :)*
 
 To take a quick test drive use this handy one liner::
 
