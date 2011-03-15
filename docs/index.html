@@ -75,6 +75,24 @@ fab setup</pre>
 should initiate a session, all  you need is the hostname and
 root password of an Ubuntu 10.10 server.</p>
 <p>Ideally this would be a new Rackspace Cloud Server instance.</p>
+<div class="section" id="this-installer-uses-pip">
+<h2>This Installer Uses Pip<a class="headerlink" href="#this-installer-uses-pip" title="Permalink to this headline">¶</a></h2>
+<p>The quick install script attempts to install Fabric if it cannot be found. For this
+task, the <tt class="docutils literal"><span class="pre">pip</span></tt> utility is used, so you&#8217;ll need to have <tt class="docutils literal"><span class="pre">pip</span></tt> available on your
+computer.</p>
+<div class="section" id="ubuntu-pip">
+<h3>Ubuntu Pip<a class="headerlink" href="#ubuntu-pip" title="Permalink to this headline">¶</a></h3>
+<p>Installing <tt class="docutils literal"><span class="pre">pip</span></tt> on Ubuntu is fairly easy:</p>
+<div class="highlight-python"><pre>sudo apt-get install python-pip</pre>
+</div>
+</div>
+<div class="section" id="mac-os-x-pip">
+<h3>Mac OS X Pip<a class="headerlink" href="#mac-os-x-pip" title="Permalink to this headline">¶</a></h3>
+<p>Mac OS X comes with <tt class="docutils literal"><span class="pre">easy_install</span></tt> which you can use to get <tt class="docutils literal"><span class="pre">pip</span></tt> like this:</p>
+<div class="highlight-python"><pre>sudo easy_install pip</pre>
+</div>
+</div>
+</div>
 </div>
 <div class="section" id="requirements">
 <span id="id2"></span><h1>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline">¶</a></h1>
@@ -82,8 +100,9 @@ root password of an Ubuntu 10.10 server.</p>
 <ul class="simple">
 <li>Python <a class="reference external" href="http://python.org/">http://python.org/</a></li>
 <li>Fabric (the package for Python) <a class="reference external" href="http://fabfile.org/">http://fabfile.org/</a></li>
-<li>An Ubuntu 10.10 system</li>
-<li>Root shell access</li>
+<li>A standard, sane ssh key pair on your local machine</li>
+<li>An Ubuntu 10.10 server</li>
+<li>Root access to that Ubuntu server</li>
 </ul>
 <p>These fab tasks are specifically intended to be used with an
 Ubuntu 10.10 system that has  shell access to a literal root
@@ -91,6 +110,56 @@ account -  namely Rackspace  Cloud Server  instances running
 Ubuntu 10.10  Business Edition,  previously known  as Ubuntu
 Server 10.10.</p>
 <p>Other setups are planned for future releases.</p>
+<div class="section" id="ssh-keys">
+<h2>SSH Keys<a class="headerlink" href="#ssh-keys" title="Permalink to this headline">¶</a></h2>
+<p><em>If you regularly log in  to your servers through SSH without
+requiring a password, then you should be ready to go and you
+can skip this section.</em></p>
+<p>To provide  one click  style installation, this  script uses
+public private  key pairs  rather exclusively. Much  of this
+script can get by without SSH  keys, but you&#8217;ll have to keep
+constantly entering your passwords and  so you&#8217;ll have to do
+some babysitting to see the script through to completion.</p>
+<p>Setting up the git  server, however, absolutely requires ssh
+key access  and so if you  want the git server,  then you&#8217;ll
+need  to generate  an ssh  key for  yourself if  you haven&#8217;t
+already.</p>
+<p>It  is assumed  that you  know  the basics  of creating  and
+managing ssh keys using <tt class="docutils literal"><span class="pre">ssh-agent</span></tt> and have already set
+up your own local key pair.</p>
+<p>If you don&#8217;t know how to do that, here&#8217;s a really brief
+overview:</p>
+<div class="section" id="making-yourself-a-key-pair">
+<h3>Making Yourself a Key Pair<a class="headerlink" href="#making-yourself-a-key-pair" title="Permalink to this headline">¶</a></h3>
+<p>This script assumes that you have a standard ssh key in the standard place:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">ssh</span><span class="o">-</span><span class="n">add</span> <span class="o">-</span><span class="n">L</span>
+</pre></div>
+</div>
+<p>Should say something like:</p>
+<div class="highlight-python"><pre>ssh-rsa AAAAOiejfei1938fj38298fjfjjaaxxccm0q0eeewoiajfevnoijsenzoiejfienoiae== john@localhost</pre>
+</div>
+<p>If it doesn&#8217;t then you will run in to problems during the phase where it installs
+the git server, so you&#8217;ll need to either add your key or generate a key.</p>
+<p>Try just adding any keys you might have with plain old:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">ssh</span><span class="o">-</span><span class="n">add</span>
+</pre></div>
+</div>
+<p>Or just generate yourself a new key with:</p>
+<div class="highlight-python"><pre>ssh-keygen -t rsa</pre>
+</div>
+<p>Or if you don&#8217;t want to be prompted for anything, you could probably use this:</p>
+<div class="highlight-python"><pre>ssh-keygen -t rsa -N "" -f ~/.ssh/id_rsa</pre>
+</div>
+</div>
+<div class="section" id="ssh-on-mac-os-x">
+<h3>SSH on Mac OS X<a class="headerlink" href="#ssh-on-mac-os-x" title="Permalink to this headline">¶</a></h3>
+<p>If you are on Mac OS X you will need to install <a class="reference external" href="https://github.com/mxcl/homebrew">https://github.com/mxcl/homebrew</a> so
+that you can get the <tt class="docutils literal"><span class="pre">ssh-copy-id</span></tt> utility. Once you have homebrew installed, simply
+run the following command:</p>
+<div class="highlight-python"><pre>brew install ssh-copy-id</pre>
+</div>
+</div>
+</div>
 </div>
 <div class="section" id="basic-usage">
 <span id="basics"></span><h1>Basic Usage<a class="headerlink" href="#basic-usage" title="Permalink to this headline">¶</a></h1>
@@ -488,8 +557,22 @@ machine for development.</p>
   <ul>
 <li><a class="reference internal" href="#">Ubuntu Server In A Box Fabfile</a></li>
 <li><a class="reference internal" href="#what-is-it">What Is It?</a></li>
-<li><a class="reference internal" href="#quick-start">Quick Start</a></li>
-<li><a class="reference internal" href="#requirements">Requirements</a></li>
+<li><a class="reference internal" href="#quick-start">Quick Start</a><ul>
+<li><a class="reference internal" href="#this-installer-uses-pip">This Installer Uses Pip</a><ul>
+<li><a class="reference internal" href="#ubuntu-pip">Ubuntu Pip</a></li>
+<li><a class="reference internal" href="#mac-os-x-pip">Mac OS X Pip</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#requirements">Requirements</a><ul>
+<li><a class="reference internal" href="#ssh-keys">SSH Keys</a><ul>
+<li><a class="reference internal" href="#making-yourself-a-key-pair">Making Yourself a Key Pair</a></li>
+<li><a class="reference internal" href="#ssh-on-mac-os-x">SSH on Mac OS X</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li><a class="reference internal" href="#basic-usage">Basic Usage</a></li>
 <li><a class="reference internal" href="#complete-install-instructions">Complete Install Instructions</a><ul>
 <li><a class="reference internal" href="#salting-to-taste">Salting To Taste</a></li>

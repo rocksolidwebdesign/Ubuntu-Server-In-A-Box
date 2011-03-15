@@ -40,6 +40,28 @@ root password of an Ubuntu 10.10 server.
 
 Ideally this would be a new Rackspace Cloud Server instance.
 
+-----------------------
+This Installer Uses Pip
+-----------------------
+
+The quick install script attempts to install Fabric if it cannot be found. For this
+task, the ``pip`` utility is used, so you'll need to have ``pip`` available on your
+computer.
+
+Ubuntu Pip
+----------
+
+Installing ``pip`` on Ubuntu is fairly easy::
+
+    sudo apt-get install python-pip
+
+Mac OS X Pip
+------------
+
+Mac OS X comes with ``easy_install`` which you can use to get ``pip`` like this::
+
+    sudo easy_install pip
+
 .. _requirements:
 
 Requirements
@@ -49,8 +71,9 @@ You need:
 
 * Python http://python.org/
 * Fabric (the package for Python) http://fabfile.org/
-* An Ubuntu 10.10 system
-* Root shell access
+* A standard, sane ssh key pair on your local machine
+* An Ubuntu 10.10 server
+* Root access to that Ubuntu server
 
 These fab tasks are specifically intended to be used with an
 Ubuntu 10.10 system that has  shell access to a literal root
@@ -59,6 +82,67 @@ Ubuntu 10.10  Business Edition,  previously known  as Ubuntu
 Server 10.10.
 
 Other setups are planned for future releases.
+
+--------
+SSH Keys
+--------
+
+*If you regularly log in  to your servers through SSH without
+requiring a password, then you should be ready to go and you
+can skip this section.*
+
+To provide  one click  style installation, this  script uses
+public private  key pairs  rather exclusively. Much  of this
+script can get by without SSH  keys, but you'll have to keep
+constantly entering your passwords and  so you'll have to do
+some babysitting to see the script through to completion.
+
+Setting up the git  server, however, absolutely requires ssh
+key access  and so if you  want the git server,  then you'll
+need  to generate  an ssh  key for  yourself if  you haven't
+already.
+
+It  is assumed  that you  know  the basics  of creating  and
+managing ssh keys using ``ssh-agent`` and have already set
+up your own local key pair.
+
+If you don't know how to do that, here's a really brief
+overview:
+
+Making Yourself a Key Pair
+--------------------------
+
+This script assumes that you have a standard ssh key in the standard place::
+
+    ssh-add -L
+
+Should say something like::
+
+    ssh-rsa AAAAOiejfei1938fj38298fjfjjaaxxccm0q0eeewoiajfevnoijsenzoiejfienoiae== john@localhost
+
+If it doesn't then you will run in to problems during the phase where it installs
+the git server, so you'll need to either add your key or generate a key.
+
+Try just adding any keys you might have with plain old::
+
+    ssh-add
+
+Or just generate yourself a new key with::
+
+    ssh-keygen -t rsa
+
+Or if you don't want to be prompted for anything, you could probably use this::
+
+    ssh-keygen -t rsa -N "" -f ~/.ssh/id_rsa
+
+SSH on Mac OS X
+---------------
+
+If you are on Mac OS X you will need to install https://github.com/mxcl/homebrew so 
+that you can get the ``ssh-copy-id`` utility. Once you have homebrew installed, simply
+run the following command::
+
+    brew install ssh-copy-id
 
 .. _basics:
 
