@@ -46,12 +46,18 @@ You might need
 
 You **will definitely need**
 
+Python
+
 * Python 2.x, specifically 2.6 or 2.7
 * The python package calle Fabric, or...
 * The python package called pip (for installing fabric)
 
+SSH Keys
+
 * An standard ssh key pair living at ``~/.ssh/id_rsa`` and ``~/.ssh/id_rsa.pub``
 * The ``ssh-copy-id`` utility (Note: Mac OS X users don't have this by default)
+
+An Ubuntu Server
 
 * The hostname of a server with Ubuntu 10.10 on it
 * The root password for that Ubuntu 10.10 server
