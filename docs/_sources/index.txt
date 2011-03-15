@@ -6,6 +6,13 @@
 Ubuntu Server In A Box Fabfile
 ==============================
 
+Note: the docs don't look so good on github (the links are all broken for example), so
+I suggest you do a checkout and then view them directly on your computer.
+
+The real docs live in::
+
+    docs/index.html
+
 .. _about:
 
 What Is It?
