@@ -19,12 +19,17 @@ if ! git clone "$git_url" ; then
 fi
 
 cd Ubuntu-Server-In-A-Box
-if [ "$VIRTUAL_ENV" != "" ]; then
-    # if the user is currently in a virtual environment then use that
-    pip install -r requirements.txt
-else
-    # otherwise, install fabric system wide
-    sudo pip install -r requirements.txt
+has_fabric=$(which fab)
+if ! $has_fabric ; then
+    if [ "$VIRTUAL_ENV" != "" ]; then
+        # if the user is currently in a virtual environment then use that
+        pip install -r requirements.txt
+    else
+        printf "\nIt looks like you don't have Fabric installed, please enter your local administration password to install Fabric...\n"
+
+        # otherwise, install fabric system wide
+        sudo pip install -r requirements.txt
+    fi
 fi
 
 cd maverick_cloud
