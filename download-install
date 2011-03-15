@@ -19,7 +19,7 @@ if ! git clone "$git_url" ; then
 fi
 
 cd Ubuntu-Server-In-A-Box
-if [[ ! $(which fab) ]] ; then
+if [ ! $(which fab) ] ; then
     if [ "$VIRTUAL_ENV" != "" ]; then
         # if the user is currently in a virtual environment then use that
         pip install -r requirements.txt
