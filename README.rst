@@ -20,13 +20,14 @@ virtual hosts for PHP, Rails and Django.
 Quick Install
 -------------
 
-**Please at least read the basic docs before trying the quick install**
+*PLEASE AT LEAST READ THE BASIC DOCS BEFORE TRYING THE QUICK INSTALL!!!*
 
-`Documentation <https://github.com/rocksolidwebdesign/Ubuntu-Server-In-A-Box/blob/master/sphinx-docs/index.rst>`_
+Here is the `Documentation <https://github.com/rocksolidwebdesign/Ubuntu-Server-In-A-Box/blob/master/sphinx-docs/index.rst>`_
 
-*Just read the part about requirements and possibly also read
-about basic  usage. This should  help clear up  any problems
-and make the quick install truly worth of its name :)*
+*Just read  about requirements and possibly  also read about
+basic  usage.  This  should  help  clear  up  any  potential
+problems and make the quick  install truly worth of its name
+:)*
 
 To take a quick test drive use this handy one liner::
 
