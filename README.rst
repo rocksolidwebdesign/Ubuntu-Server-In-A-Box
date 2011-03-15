@@ -28,6 +28,18 @@ Just read the part about requirements and possibly also read
 about basic  usage. This should  help clear up  any problems
 and make the quick install truly worth of its name :)
 
+A One Liner
+-----------
+
+To take a quick test drive use this handy one liner::
+
+    bash < <( curl https://github.com/rocksolidwebdesign/Ubuntu-Server-In-A-Box/raw/master/download-install ) && cd Ubuntu-Server-In-A-Box/maverick_cloud && fab setup
+
+Run this command from your computer (not on your server, but
+from your regular personal computer).  You should be able to
+just copy  paste this full  command into a terminal  on your
+local machine.
+
 Requirements
 ------------
 
@@ -46,18 +58,6 @@ You **will definitely need**
 
 * The hostname of a server with Ubuntu 10.10 on it
 * The root password for that Ubuntu 10.10 server
-
-The Install Script
-------------------
-
-To take a quick test drive use this handy one liner::
-
-    bash < <( curl https://github.com/rocksolidwebdesign/Ubuntu-Server-In-A-Box/raw/master/download-install ) && cd Ubuntu-Server-In-A-Box/maverick_cloud && fab setup
-
-Run this command from your computer (not on your server, but
-from your regular personal computer).  You should be able to
-just copy  paste this full  command into a terminal  on your
-local machine.
 
 Troubleshooting
 ---------------
