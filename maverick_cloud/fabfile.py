@@ -1151,6 +1151,9 @@ def regen_configs(): # {{{
     """
     args = '_ "{}"'
 
+    local('mkdir -p '+local_config_dir+'/nginx/sites-available')
+    local('mkdir -p '+local_config_dir+'/apache/sites-available')
+
     replacements = 'sed -e "s/SERVERDOMAINNAME/'+server_domain+'/" | sed -e "s#SERVERWEBROOT#'+webroot_dir+'#"'
     cmd = 'fname=$(echo $1 | sed "s#.*/##"); cat $fname | '+replacements+' > ../sites-available/$fname'
     with lcd(local_config_dir+'/apache/vhost_templates'):
