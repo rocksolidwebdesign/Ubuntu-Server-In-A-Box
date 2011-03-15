@@ -179,12 +179,18 @@ And  you can  get a  better overview  of what  does what  by
 reading :doc:`tasks`.  With that  said, here are  some other
 sub tasks you may wish to run independently
 
-Pretty much all of these  tasks require that you first setup
-your users with::
+The main setup task simply calls the following three tasks::
 
+    fab setup_init
+    fab setup_users
+    fab setup_server
+
+Pretty much the entire system requires that you run these two::
+
+    fab setup_init
     fab setup_users
 
-and then you can run some or all of the following::
+but then you can run some or all of the following::
 
     fab setup_apache
     fab setup_nginx

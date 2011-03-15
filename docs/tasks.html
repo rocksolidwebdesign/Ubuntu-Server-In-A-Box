@@ -173,16 +173,6 @@ to compile software.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="maverick_cloud.fabfile.aptget_init">
-<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">aptget_init</tt><big>(</big><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.aptget_init" title="Permalink to this definition">¶</a></dt>
-<dd><p>Updates package list and installs: locate, tmux, add-apt-repository</p>
-<p>Some   various  handy   things   I   alwas  want,   plus
-<tt class="docutils literal"><span class="pre">add-apt-repository</span></tt> is currently  a dependency of the
-ubuntu packaging tasks, so do  not remove that or remove
-calls to this function</p>
-</dd></dl>
-
-<dl class="function">
 <dt id="maverick_cloud.fabfile.aptget_lamp">
 <tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">aptget_lamp</tt><big>(</big><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.aptget_lamp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Install Apache along with CGI and PHP modules</p>
@@ -195,6 +185,16 @@ software like Magento</p>
 <dt id="maverick_cloud.fabfile.aptget_mail_server">
 <tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">aptget_mail_server</tt><big>(</big><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.aptget_mail_server" title="Permalink to this definition">¶</a></dt>
 <dd><p>Install the commonly desired tools for setting up a mail server</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="maverick_cloud.fabfile.aptget_misc_deps">
+<tt class="descclassname">maverick_cloud.fabfile.</tt><tt class="descname">aptget_misc_deps</tt><big>(</big><big>)</big><a class="headerlink" href="#maverick_cloud.fabfile.aptget_misc_deps" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates package list and installs: locate, tmux, add-apt-repository</p>
+<p>Some   various  handy   things   I   alwas  want,   plus
+<tt class="docutils literal"><span class="pre">add-apt-repository</span></tt> is currently  a dependency of the
+ubuntu packaging tasks, so do  not remove that or remove
+calls to this function</p>
 </dd></dl>
 
 <dl class="function">

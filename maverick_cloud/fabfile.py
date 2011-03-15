@@ -35,7 +35,12 @@ def setup(update=True): # {{{
     """
     Bootstrap an entire server from a blank rackspace Ubuntu 10.10 VPS
     """
+    setup_init()
+    setup_users()
+    setup_server()
 
+# }}}
+def setup_init(): # {{{
     # Preparation
     # ---------------------------------------------------
     # install the root user, config and working dirs
@@ -43,7 +48,7 @@ def setup(update=True): # {{{
 
     # this is basically a dependency actually
     # because it has add-apt-repository
-    aptget_init()
+    aptget_misc_deps()
 
     # Install security updates
     if update:
@@ -56,14 +61,6 @@ def setup(update=True): # {{{
     # I like to have a nice vim config
     aptget_vim73()
     install_vim_config()
-
-    # Main Server Setup
-    # ---------------------------------------------------
-    setup_users()  # setup users in a common group
-
-    setup_server() # includes PHP and MySQL
-    setup_python() # includes virtualenv, django and wsgi
-    setup_ruby()   # includes rvm, rails and passenger
 
 # }}}
 def setup_server(): # {{{
@@ -78,6 +75,9 @@ def setup_server(): # {{{
 
     setup_git_server()
     #setup_svn_server()
+
+    setup_python() # includes virtualenv, django and wsgi
+    setup_ruby()   # includes rvm, rails and passenger
 
 # }}}
 def clean_all(): # {{{
@@ -144,6 +144,7 @@ def setup_apache(): # {{{
     aptget_lamp()
     a2enmod_rewrite()
     a2enmod_proxy()
+    install_apache_config()
 
 # }}}
 def setup_nginx(): # {{{
@@ -500,10 +501,12 @@ def install_webroot(): # {{{
 
     backup_webroot()
     run('if [ -e "'+webroot_dir+'" ]; then rm -rf '+webroot_dir+'; fi')
-
-
+    run('mkdir -p '+webroot_dir+'/apache')
     run('mkdir -p '+webroot_dir+'/django')
     run('mkdir -p '+webroot_dir+'/rails')
+
+    # allow team and web server to edit files in webroot
+    configure_open_share(deploy_username, server_groupname, webroot_dir)
 
 # }}}
 def backup_apache_config(): # {{{
@@ -561,12 +564,6 @@ def install_apache_config(): # {{{
         run('tar -zxf sites-available.tar.gz')
         run('rm -rf sites-available.tar.gz')
 
-    # allow team and or admins to add and edit vhosts
-    if single_user_mode:
-        configure_open_share(deploy_username, team_groupname, '/etc/apache2/sites-available')
-    else:
-        configure_restricted_share('root', team_groupname, '/etc/apache2/sites-available')
-
     # enable all the vhosts
     with cd('/etc/apache2/sites-enabled'):
         run('find ../sites-available/ -type f -exec ln -s "{}" . \;')
@@ -582,6 +579,15 @@ def install_apache_config(): # {{{
 
     # set this up later?
     upload_website_apache_localhost()
+
+    # re-chown the webroot since we uploaded localhost as root
+    configure_open_share(deploy_username, server_groupname, webroot_dir)
+
+    # allow team and or admins to add and edit vhosts
+    if single_user_mode:
+        configure_open_share(deploy_username, team_groupname, '/etc/apache2/sites-available')
+    else:
+        configure_restricted_share('root', team_groupname, '/etc/apache2/sites-available')
 
     run('service apache2 restart')
 
@@ -942,7 +948,7 @@ def aptget_vim73(): # {{{
     run('yes | apt-get install vim ctags par')
 
 # }}}
-def aptget_init(): # {{{
+def aptget_misc_deps(): # {{{
     """
     Updates package list and installs: locate, tmux, add-apt-repository
 
