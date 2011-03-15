@@ -77,7 +77,7 @@ Further Information
 Have a `look at the installer <https://github.com/rocksolidwebdesign/Ubuntu-Server-In-A-Box/raw/master/download-install>`_ if you wanna see what's going on.
 
 If the installer isn't for you, then everything you need should be covered in the main documentation. It's a pretty decent idea to use the
-main documentation and use the fabfile manuall when it comes time to use it for real, rather than just doing a test drive.
+main documentation and use the fabfile manually when it comes time to use it for real, rather than just doing a test drive.
 
 * `Documentation <https://github.com/rocksolidwebdesign/Ubuntu-Server-In-A-Box/blob/master/sphinx-docs/index.rst>`_
 
