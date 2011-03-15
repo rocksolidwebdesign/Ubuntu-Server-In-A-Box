@@ -35,12 +35,12 @@ def setup(update=True): # {{{
     """
     Bootstrap an entire server from a blank rackspace Ubuntu 10.10 VPS
     """
-    setup_init()
+    setup_init(update)
     setup_users()
     setup_server()
 
 # }}}
-def setup_init(): # {{{
+def setup_init(update=True): # {{{
     # Preparation
     # ---------------------------------------------------
     # install the root user, config and working dirs

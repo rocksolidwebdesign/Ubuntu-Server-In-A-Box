@@ -5,10 +5,6 @@ Ubuntu Server In A Box v0.0.1-ALPHA
 A python script to automatically install and set up a full featured
 server including web, mail and git repositories.
 
-Fully tested and confirmed that install completes without errors on:
-
-    March 14th, 2011 at 8:34pm
-
 -------------
 Quick Install
 -------------
