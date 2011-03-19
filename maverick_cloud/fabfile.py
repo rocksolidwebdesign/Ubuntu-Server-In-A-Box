@@ -956,10 +956,14 @@ def aptget_misc_deps(): # {{{
     ``add-apt-repository`` is currently  a dependency of the
     ubuntu packaging tasks, so do  not remove that or remove
     calls to this function
+
+    Also installs ``ncurses-term`` for the extra terminfo entries
+    like gnome-256color so that we can still SSH from gnome-terminal
+    with a proper terminfo value and things don't get wonky
     """
     env.host_string = root_host
     run('apt-get update')
-    run('yes | apt-get install python-software-properties mlocate tmux')
+    run('yes | apt-get install python-software-properties mlocate tmux ncurses-term')
 # }}}
 
 # }}}
