@@ -7,3 +7,4 @@ alias l="ls -l"
 alias ll="ls"
 alias la='ls -A'
 alias lv='ls -Al'
+alias tmux='tmux -2'
